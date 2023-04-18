@@ -11,3 +11,5 @@ def mae(y_true: np.array, y_pred: np.array) -> np.ndarray:
 
 def rmse(y_true: np.array, y_pred: np.array) -> np.ndarray:
     return np.sqrt(np.mean(np.square(y_true - y_pred)))
+
+
