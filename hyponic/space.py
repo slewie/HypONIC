@@ -91,7 +91,8 @@ class Dimension:
 
         def mapping_func(x):
             x = clip(x, low, high)
-            return self._lbound + (x - origin) / scale
+            x = self._lbound + (x - origin) / scale
+            return self.get_value(x)
 
         return mapping_func, (low, high)
 
