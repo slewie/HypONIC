@@ -1,6 +1,8 @@
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.datasets import load_diabetes
+from mealpy.swarm_based.PSO import OriginalPSO
 from mealpy.swarm_based.CSO import OriginalCSO
+
 from hyponic.metrics import mse
 from hyponic.optimizers.optimizer import HypONIC
 
@@ -15,11 +17,12 @@ hyperparams = {
 }
 
 optimizer_kwargs = {
-    "epoch": 10,
+    "epoch": 20,
     "pop_size": 200,
 }
 
-hyponic = HypONIC(model, X, y, mse, optimizer=OriginalCSO, **optimizer_kwargs)
+# dp: PSO works better than CSO for this example
+hyponic = HypONIC(model, X, y, mse, optimizer=OriginalPSO, **optimizer_kwargs)
 hyponic.optimize(hyperparams, verbose=True)
 
 print(hyponic.get_optimized_parameters())

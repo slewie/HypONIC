@@ -14,7 +14,7 @@ class HypONIC:
         self.y = y
 
         self.metric = metric
-        if kwargs is None: # Default values for optimizer
+        if kwargs is None:  # Default values for optimizer
             kwargs = {"epoch": 10, "pop_size": 10}
 
         if optimizer is None:
@@ -58,7 +58,7 @@ class HypONIC:
             print(hyperspace)
 
         # Map hyperparameters to continuous space
-        mappings_with_bounds = hyperspace.get_continuous_mappings(origins=0)
+        mappings_with_bounds = hyperspace.get_continuous_mappings(origins=0)  # Make that all dimensions start from 0
 
         # Split mappings and bounds
         mapping_funcs = {}
@@ -82,7 +82,7 @@ class HypONIC:
 
         hyperparams_optimized, metric_optimized = self.optimizer.solve(paramspace)
 
-        # Map back to original space
+        # Map back to the original space
         hyperparams_optimized = {
             dim: mapping_funcs[dim](val) for dim, val in zip(hyperspace.dimensions_names, hyperparams_optimized)
         }

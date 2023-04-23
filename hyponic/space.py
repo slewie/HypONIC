@@ -1,6 +1,10 @@
 from typing import Callable, Any
 
 
+def clip(x, low, high):
+    return max(low, min(x, high))
+
+
 class Space:
     def __init__(self, in_dict: dict[str, Any]):
         self.__dict = dict
@@ -8,6 +12,7 @@ class Space:
         self.dimensions_names = []
 
         for key, value in in_dict.items():
+            # Converting range to list
             if isinstance(value, range):
                 value = list(value)
 
@@ -66,75 +71,56 @@ class Space:
 
 
 class Dimension:
-    def __init__(self, name=None):
+    def __init__(self, lbound, ubound, name=None):
         self.name = name
 
+        self._lbound = lbound
+        self._ubound = ubound
+
     def get_continuous_mapping(self, scale=1, origin=None) -> (Callable, (float, float)):
+        """
+        Returns a function that maps set of values to a continuous value
+        """
+        assert scale != 0, "Scale cannot be 0."
+
+        if origin is None:
+            origin = self._lbound
+
+        low = origin
+        high = origin + (self._ubound - self._lbound) * scale
+
+        def mapping_func(x):
+            x = clip(x, low, high)
+            return self._lbound + (x - origin) / scale
+
+        return mapping_func, (low, high)
+
+    def get_value(self, x):
         raise NotImplementedError
+
+    def __str__(self):
+        return f"{self.__class__.__name__}({self._lbound}, {self._ubound})"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Continuous(Dimension):
     def __init__(self, low, high, name=None):
-        super().__init__(name)
-        self.low = low
-        self.high = high
+        super().__init__(low, high, name)
 
-    def get_continuous_mapping(self, scale=1, origin=None) -> (Callable, (float, float)):
-        """
-        Returns a function that maps a discrete value to a continuous value.
-        """
-        assert scale != 0, "Scale cannot be 0."
-
-        if origin is None:
-            origin = self.low
-
-        low = origin
-        high = origin + (self.high - self.low) * scale
-
-        def mapping_func(x):
-            if x <= low:
-                return self.low
-            elif x >= high:
-                return self.high
-            return self.low + (x - origin) / scale
-
-        return mapping_func, (low, high)
-
-    def __str__(self):
-        return f"Continuous({self.low}, {self.high})"
-
-    def __repr__(self):
-        return f"Continuous({self.low}, {self.high})"
+    def get_value(self, x):
+        # Note that x is already in the correct range. No need to clip.
+        # > maybe add transformation here? E.g. log, exp, etc.
+        # TODO: non-linear mapping
+        return x
 
 
 class Discrete(Dimension):
     def __init__(self, values, name=None):
-        super().__init__(name)
+        super().__init__(0, len(values) - 1, name)
         self.values = values
 
-    def get_continuous_mapping(self, scale: float = 1, origin: None | float = None) -> (Callable, (float, float)):
-        """
-        Returns a function that maps a discrete value to a continuous value.
-        """
-        assert scale != 0, "Scale cannot be 0."
-
-        if origin is None:
-            origin = 0
-
-        low = origin
-        high = origin + len(self.values) * scale
-
-        def mapping_func(x: int | float) -> Any:
-            if x <= low:
-                return self.values[0]
-            elif x >= high:
-                return self.values[-1]
-            return self.values[int((x - origin) / scale)]
-
-        return mapping_func, (low, high)
-
-    def __str__(self):
-        return f"Discrete({self.values})"
-
-    def __repr__(self):
-        return f"Discrete({self.values})"
+    def get_value(self, x):
+        # Note that x is already in the correct range. No need to clip.
+        return self.values[int(x)]
