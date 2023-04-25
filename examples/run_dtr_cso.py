@@ -1,10 +1,9 @@
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.datasets import load_diabetes
 from mealpy.swarm_based.PSO import OriginalPSO
-from mealpy.swarm_based.CSO import OriginalCSO
 
 from hyponic.metrics import mse
-from hyponic.optimizers.optimizer import HypONIC
+from hyponic.optimizer import HypONIC
 
 X, y = load_diabetes(return_X_y=True)
 model = DecisionTreeRegressor()
