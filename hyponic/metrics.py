@@ -13,3 +13,88 @@ def rmse(y_true: np.array, y_pred: np.array) -> np.ndarray:
     return np.sqrt(np.mean(np.square(y_true - y_pred)))
 
 
+def r2(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    return 1 - np.sum(np.square(y_true - y_pred)) / np.sum(np.square(y_true - np.mean(y_true)))
+
+
+def adjusted_r2(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    return 1 - (1 - r2(y_true, y_pred)) * (len(y_true) - 1) / (len(y_true) - len(y_true[0]) - 1)
+
+
+def huber(y_true: np.array, y_pred: np.array, delta: float = 1.0) -> np.ndarray:
+    error = y_true - y_pred
+    return np.where(np.abs(error) <= delta, 0.5 * np.square(error), delta * (np.abs(error) - 0.5 * delta))
+
+
+def log_loss(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    return np.mean(np.log(1 + np.exp(-y_true * y_pred)))
+
+
+def binary_crossentropy(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+
+
+def categorical_crossentropy(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    return -np.mean(np.sum(y_true * np.log(y_pred), axis=-1))
+
+
+def accuracy(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    return np.mean(np.equal(y_true, y_pred))
+
+
+def precision(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    tp = np.sum(np.logical_and(y_true == 1, y_pred == 1))
+    fp = np.sum(np.logical_and(y_true == 0, y_pred == 1))
+    return tp / (tp + fp)
+
+
+def recall(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    tp = np.sum(np.logical_and(y_true == 1, y_pred == 1))
+    fn = np.sum(np.logical_and(y_true == 1, y_pred == 0))
+    return tp / (tp + fn)
+
+
+def f1(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    p = precision(y_true, y_pred)
+    r = recall(y_true, y_pred)
+    return 2 * p * r / (p + r)
+
+
+def fbeta(y_true: np.array, y_pred: np.array, beta: float = 1.0) -> np.ndarray:
+    p = precision(y_true, y_pred)
+    r = recall(y_true, y_pred)
+    return (1 + beta ** 2) * p * r / (beta ** 2 * p + r)
+
+
+def confusion_matrix(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    tp = np.sum(np.logical_and(y_true == 1, y_pred == 1))
+    fp = np.sum(np.logical_and(y_true == 0, y_pred == 1))
+    fn = np.sum(np.logical_and(y_true == 1, y_pred == 0))
+    tn = np.sum(np.logical_and(y_true == 0, y_pred == 0))
+    return np.array([[tp, fp], [fn, tn]])
+
+
+# this is a dictionary of metrics and their corresponding optimization direction
+metrics_minmax = {
+    "mse": [mse, 'min'],
+    "mae": [mae, 'min'],
+    "rmse": [rmse, 'min'],
+    "r2": [r2, 'max'],
+    "adjusted_r2": [adjusted_r2, 'max'],
+    "huber": [huber, 'min'],
+    "log_loss": [log_loss, 'min'],
+    "binary_crossentropy": [binary_crossentropy, 'min'],
+    "categorical_crossentropy": [categorical_crossentropy, 'min'],
+    "accuracy": [accuracy, 'max'],
+    "precision": [precision, 'max'],
+    "recall": [recall, 'max'],
+    "f1": [f1, 'max'],
+    "fbeta": [fbeta, 'max'],
+    "confusion_matrix": [confusion_matrix, 'max']
+}
+
+
+
+
+
+
