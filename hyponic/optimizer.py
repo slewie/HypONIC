@@ -1,4 +1,5 @@
-from mealpy.swarm_based.PSO import OriginalPSO
+from hyponic.optimizers.PSO import IWPSO
+from hyponic.metrics import metrics_minmax
 
 from typing import Callable
 
@@ -8,17 +9,23 @@ from functools import partial
 
 class HypONIC:
     # XXX: Should be moved from optimizers folder
-    def __init__(self, model, X, y, metric: Callable, optimizer=None, **kwargs):
+    def __init__(self, model, X, y, metric: Callable | str, optimizer=None, **kwargs):
         self.model = model
         self.X = X
         self.y = y
 
-        self.metric = metric
+        # if metric is not in metrics_minmax, then it is assumed to be a custom metric and it is assumed to be minimized
+        if isinstance(metric, str):
+            self.metric = metrics_minmax.get(metric, 'min')[0]
+            self.minmax = metrics_minmax.get(metric, 'min')[-1]
+        else:
+            self.metric = metric
+            self.minmax = metrics_minmax.get(metric.__name__, 'min')[-1]
         if kwargs is None:  # Default values for optimizer
             kwargs = {"epoch": 10, "pop_size": 10}
 
         if optimizer is None:
-            self.optimizer = OriginalPSO(**kwargs)
+            self.optimizer = IWPSO(**kwargs)
         else:
             self.optimizer = optimizer(**kwargs)
 
@@ -77,7 +84,7 @@ class HypONIC:
             "fit_func": partial(self._fitness_wrapper, hyperspace.dimensions_names, mapping_funcs),
             "lb": low_bounds,
             "ub": highs_bounds,
-            "minmax": "min"  # TODO: it should depends on the metric
+            "minmax": self.minmax
         }
 
         hyperparams_optimized, metric_optimized = self.optimizer.solve(paramspace)
