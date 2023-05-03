@@ -19,11 +19,8 @@ class PSO(BaseOptimizer):
         # TODO: add multithreading and multiprocessing
         # TODO: check if the problem_dict is valid
         # TODO: if lb and ub are not provided, use the default values
-        self.function = problem_dict['fit_func']
-        self.lb = np.array(problem_dict['lb'])
-        self.ub = np.array(problem_dict['ub'])
-        self.minmax = problem_dict['minmax'] if self.minmax is None else self.minmax
-        self.dimensions = len(self.lb)
+        super().initialize(problem_dict)
+
         self.coords = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
         max_velocity = self.ub - self.lb
 

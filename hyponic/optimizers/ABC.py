@@ -6,18 +6,16 @@ from copy import deepcopy
 class ABC(BaseOptimizer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
         self.limits = kwargs.get('limits', 25)  # The number of trials before abandoning a food source
         self.coords = None
         self.fitness = None
         self.g_best = None
         self.g_best_coords = None
+        self.trials = None
 
     def initialize(self, problem_dict):
-        self.function = problem_dict['fit_func']
-        self.lb = np.array(problem_dict['lb'])
-        self.ub = np.array(problem_dict['ub'])
-        self.minmax = problem_dict['minmax'] if self.minmax is None else self.minmax
-        self.dimensions = len(self.lb)
+        super().initialize(problem_dict)
 
         self.coords = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
         self.fitness = np.array([self.function(self.coords[i]) for i in range(self.population_size)])
