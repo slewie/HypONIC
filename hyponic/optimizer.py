@@ -1,5 +1,7 @@
+from warnings import warn
+
 from hyponic.optimizers.PSO import IWPSO
-from hyponic.metrics import metrics_minmax
+from hyponic.metrics import METRICS_DICT
 
 from typing import Callable
 
@@ -8,19 +10,28 @@ from functools import partial
 
 
 class HypONIC:
-    # XXX: Should be moved from optimizers folder
     def __init__(self, model, X, y, metric: Callable | str, optimizer=None, **kwargs):
         self.model = model
         self.X = X
         self.y = y
 
-        # if metric is not in metrics_minmax, then it is assumed to be a custom metric and it is assumed to be minimized
         if isinstance(metric, str):
-            self.metric = metrics_minmax.get(metric, 'min')[0]
-            self.minmax = metrics_minmax.get(metric, 'min')[-1]
-        else:
+            # Try to get metric from the METRICS_DICT
+            self.metric = METRICS_DICT.get(metric, None)
+
+            if self.metric is None:
+                raise Exception(f"Metric {metric} is not found.")
+        elif isinstance(metric, Callable):
             self.metric = metric
-            self.minmax = metrics_minmax.get(metric.__name__, 'min')[-1]
+
+        try:
+            self.minmax = self.metric.__getattribute__("minmax")
+        except AttributeError:
+            # If a metric does not have minmax attribute,
+            # then it is assumed to be a custom metric and will be minimized by default
+            warn(f"Metric {metric.__name__} does not have minmax attribute. Minimize by default.")
+            self.minmax = "min"
+
         if kwargs is None:  # Default values for optimizer
             kwargs = {"epoch": 10, "pop_size": 10}
 
