@@ -27,8 +27,8 @@ class BaseOptimizer(ABC):
         """
         # Unpack the problem dictionary
         self.function = problem_dict["fit_func"]
-        self.lb = problem_dict["lb"]
-        self.ub = problem_dict["ub"]
+        self.lb = np.array(problem_dict["lb"])
+        self.ub = np.array(problem_dict["ub"])
         self.minmax = problem_dict['minmax'] if self.minmax is None else self.minmax
 
         self.dimensions = len(self.lb)
