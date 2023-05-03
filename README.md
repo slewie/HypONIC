@@ -4,8 +4,10 @@
 the hyperparameters of machine learning models. The library provides a simple interface for sklearn and keras models.
 
 ## Features
-*HypONIC* supports the following algorithms:
-- Swarm-based:
+*HypONIC* supports different nature inspired computing algorithms.
+The following algorithms are currently implemented or are planned to be implemented:
+
+**Swarm-based:**
 - - [x] Particle Swarm Optimization (PSO)
 - - [x] Inertia Weight PSO (IWPSO)
 - - [ ] Ant Colony Optimization (ACO)
@@ -13,7 +15,8 @@ the hyperparameters of machine learning models. The library provides a simple in
 - - [ ] Grey Wolf Optimizer (GWO)
 - - [ ] Cuckoo Search (CS)
 - - [ ] Firefly Algorithm (FA)
-- Physics-based:
+
+**Physics-based:**
 - - [ ] Simulated Annealing (SA)
 
 ## Minimal Example
