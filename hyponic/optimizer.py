@@ -73,6 +73,8 @@ class HypONIC:
         hyperspace = Space(hyperparams)
         if verbose:
             print("Successfully created a space for hyperparameters optimization")
+            print(f"Using {self.optimizer.__class__.__name__} optimizer")
+            print(f"Metric {self.metric.__name__} is subject to {self.minmax}imization")
             print(hyperspace)
 
         # Map hyperparameters to continuous space
@@ -98,7 +100,7 @@ class HypONIC:
             "minmax": self.minmax
         }
 
-        hyperparams_optimized, metric_optimized = self.optimizer.solve(paramspace)
+        hyperparams_optimized, metric_optimized = self.optimizer.solve(paramspace, verbose=verbose)
 
         # Map back to the original space
         hyperparams_optimized = {
