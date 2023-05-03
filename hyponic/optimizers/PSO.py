@@ -15,16 +15,6 @@ class PSO(BaseOptimizer):
         self.g_best = np.inf
         self.g_best_coords = None
 
-    def _minmax(self):
-        if self.minmax == 'min':
-            return np.min
-        return np.max
-
-    def _argminmax(self):
-        if self.minmax == 'min':
-            return np.argmin
-        return np.argmax
-
     def initialize(self, problem_dict):
         # TODO: add multithreading and multiprocessing
         # TODO: check if the problem_dict is valid

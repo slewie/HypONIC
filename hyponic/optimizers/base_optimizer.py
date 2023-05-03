@@ -50,6 +50,16 @@ class BaseOptimizer(ABC):
         """
         pass
 
+    def _minmax(self):
+        if self.minmax == 'min':
+            return np.min
+        return np.max
+
+    def _argminmax(self):
+        if self.minmax == 'min':
+            return np.argmin
+        return np.argmax
+
     def solve(self, problem_dict, verbose=False):
         """
         Solve the problem
