@@ -16,6 +16,7 @@ class BaseOptimizer(ABC):
         self.ub = None
         self.minmax = kwargs.get('minmax', None)
 
+        self.interval_len = None
         self.dimensions = None
 
     @abstractmethod
@@ -31,13 +32,14 @@ class BaseOptimizer(ABC):
         self.ub = np.array(problem_dict["ub"])
         self.minmax = problem_dict['minmax'] if self.minmax is None else self.minmax
 
+        self.intervals = self.ub - self.lb
         self.dimensions = len(self.lb)
 
     @abstractmethod
-    def evolve(self, epoch):
+    def evolve(self, current_epoch):
         """
         Evolve the population for one epoch
-        :param epoch: current epoch number
+        :param current_epoch: current epoch number
         :return: None
         """
         pass
@@ -76,8 +78,8 @@ class BaseOptimizer(ABC):
         :return: None
         """
         self.initialize(problem_dict)
-        for epoch in range(self.epoch):
-            self.evolve(epoch)
+        for current_epoch in range(self.epoch):
+            self.evolve(current_epoch)
             if verbose:
-                print(f'Epoch: {epoch}, Best Score: {self.get_best_score()}')
+                print(f'Epoch: {current_epoch}, Best Score: {self.get_best_score()}')
         return self.get_best_solution(), self.get_best_score()

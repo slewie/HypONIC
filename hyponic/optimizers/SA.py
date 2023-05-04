@@ -8,16 +8,12 @@ class SA(BaseOptimizer):
     Simulated Annealing
     """
 
-    def __init__(self, T, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-        self.T = T
 
         self.currents = None
         self.best = None
         self.best_score = None
-
-        self.step_size = 0.1
 
     def initialize(self, problem_dict):
         super().initialize(problem_dict)
@@ -27,12 +23,14 @@ class SA(BaseOptimizer):
         self.best = self.currents[0]
         self.best_score = self.function(self.best)
 
-    def evolve(self, epoch):
-        t = self.T / (1 + epoch)
+    def evolve(self, current_epoch):
+        progress = current_epoch / self.epoch
+        t = max(0.01, min(1, 1 - progress))
 
-        candidates = self.currents + np.random.uniform(
-            -self.step_size, self.step_size, (self.population_size, self.dimensions)
-        )
+        amplitudes = (np.max(self.intervals) - np.min(self.intervals)) * progress * 0.1
+        deltas = np.random.uniform(-amplitudes / 2, amplitudes / 2, (self.population_size, self.dimensions))
+
+        candidates = self.currents + deltas
 
         for idx, candidate in enumerate(candidates):
             candidate = np.clip(candidate, self.lb, self.ub)
