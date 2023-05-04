@@ -34,7 +34,7 @@ class BaseOptimizer(ABC):
         self.dimensions = len(self.lb)
 
     @abstractmethod
-    def evolve(self):
+    def evolve(self, epoch):
         """
         Evolve the population for one epoch
         :param epoch: current epoch number
@@ -77,7 +77,7 @@ class BaseOptimizer(ABC):
         """
         self.initialize(problem_dict)
         for epoch in range(self.epoch):
-            self.evolve()
+            self.evolve(epoch)
             if verbose:
                 print(f'Epoch: {epoch}, Best Score: {self.get_best_score()}')
         return self.get_best_solution(), self.get_best_score()

@@ -60,7 +60,7 @@ class ABC(BaseOptimizer):
                 self.fitness[i] = self.function(self.coords[i])
                 self.trials[i] = 0
 
-    def evolve(self):
+    def evolve(self, epoch):
         self._employed_bees_phase()
         self._onlooker_bees_phase()
         self._scout_bees_phase()

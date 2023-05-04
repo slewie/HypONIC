@@ -29,7 +29,7 @@ class PSO(BaseOptimizer):
         self.p_best = np.array([self.function(self.coords[i]) for i in range(self.population_size)])
         self._update_global_best()
 
-    def evolve(self):
+    def evolve(self, epoch):
         self.velocities = self._update_velocity()
         self.coords = self.coords + self.velocities
 

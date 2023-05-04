@@ -13,7 +13,7 @@ class SA(BaseOptimizer):
 
         self.T = T
 
-        self.current = None
+        self.currents = None
         self.best = None
         self.best_score = None
 
@@ -22,31 +22,31 @@ class SA(BaseOptimizer):
     def initialize(self, problem_dict):
         super().initialize(problem_dict)
 
-        self.current = np.random.uniform(self.lb, self.ub, self.dimensions)
+        self.currents = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
 
-        self.best = self.current
+        self.best = self.currents[0]
         self.best_score = self.function(self.best)
 
-    def evolve(self):
-        t = self.T
+    def evolve(self, epoch):
+        t = self.T / (1 + epoch)
 
-        for i in range(self.epoch):
-            candidate = self.current + np.random.uniform(-self.step_size, self.step_size, self.dimensions)
+        candidates = self.currents + np.random.uniform(
+            -self.step_size, self.step_size, (self.population_size, self.dimensions)
+        )
+
+        for idx, candidate in enumerate(candidates):
             candidate = np.clip(candidate, self.lb, self.ub)
-
             candidate_score = self.function(candidate)
 
             if candidate_score < self.best_score:
                 self.best = candidate
                 self.best_score = candidate_score
-                self.current = candidate
+                self.currents[idx] = candidate
             else:
                 score_abs_diff = abs(candidate_score - self.best_score)
 
-                if np.random.uniform() < np.exp(-score_abs_diff / self.T):
-                    self.current = candidate
-
-            t = t / (1 + i)
+                if np.random.uniform() < np.exp(-score_abs_diff / t):
+                    self.currents[idx] = candidate
 
     def get_best_score(self):
         return self.best_score
