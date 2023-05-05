@@ -17,6 +17,30 @@ def maximize_metric(metric):
     return metric
 
 
+class MetricInfo:
+    def __init__(self, info):
+        self.__info = info
+
+    def __str__(self):
+        if self.__info is None:
+            return self.__name__ + " provides no information."
+
+        return self.__info
+
+    def __call__(self, *args, **kwargs):
+        print(self.__info)
+        return self.__info
+
+
+def add_metric_info(info):
+    def decorator(metric):
+        metric.info = MetricInfo(info)
+        return metric
+
+    return decorator
+
+
+@add_metric_info("Mean Squared Error (MSE) is the average of the squared error that is used as the loss function.")
 @minimize_metric
 def mse(y_true: np.array, y_pred: np.array) -> np.ndarray:
     return np.mean(np.square(y_true - y_pred))
