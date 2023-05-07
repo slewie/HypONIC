@@ -12,7 +12,7 @@ class PSO(BaseOptimizer):
         self.velocities = None
         self.p_best = None
         self.p_best_coords = None
-        self.g_best = np.inf
+        self.g_best = None
         self.g_best_coords = None
 
     def initialize(self, problem_dict):
@@ -20,6 +20,7 @@ class PSO(BaseOptimizer):
         # TODO: check if the problem_dict is valid
         # TODO: if lb and ub are not provided, use the default values
         super().initialize(problem_dict)
+        self.g_best = np.inf if self.minmax == "min" else -np.inf
 
         self.coords = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
         max_velocity = self.ub - self.lb

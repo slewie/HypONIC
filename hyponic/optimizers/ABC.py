@@ -16,6 +16,7 @@ class ABC(BaseOptimizer):
 
     def initialize(self, problem_dict):
         super().initialize(problem_dict)
+        self.g_best = np.inf if self._minmax() == min else -np.inf
 
         self.coords = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
         self.fitness = np.array([self.function(self.coords[i]) for i in range(self.population_size)])
@@ -40,6 +41,8 @@ class ABC(BaseOptimizer):
 
     def _onlooker_bees_phase(self):
         probabilities = self.fitness / np.sum(self.fitness)
+        if np.isnan(probabilities).any():
+            probabilities = np.ones(self.population_size) / self.population_size
         for i in range(self.population_size):
             k = np.random.choice([j for j in range(self.population_size)], p=probabilities)
             phi = np.random.uniform(-1, 1, self.dimensions)
