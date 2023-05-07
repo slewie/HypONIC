@@ -8,7 +8,7 @@ def readme():
 
 setuptools.setup(
     name='hyponic',
-    version='0.0.2',
+    version='0.0.3dev',
     author='Vladislav Kulikov, Daniel Satarov, Ivan Chernakov',
     author_email='v.kulikov@innopolis.university, d.satarov@innopolis.university, i.chernakov@innopolis.university',
     description='Hyperparameter Optimization with Nature-Inspired Computing',

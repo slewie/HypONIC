@@ -2,7 +2,8 @@ __version__ = '0.0.1'
 
 from .hyponic import HypONIC
 
-from .metrics.decorators import add_metric_info, add_metric_to_dict, minimize_metric, maximize_metric
+from .metrics.decorators import add_metric_to_dict, add_metric_info,\
+    add_metric_aliases, minimize_metric, maximize_metric
 
 from .metrics.classification import accuracy, precision, recall, f1_score,\
     fbeta, confusion_matrix, binary_crossentropy, categorical_crossentropy, log_loss
