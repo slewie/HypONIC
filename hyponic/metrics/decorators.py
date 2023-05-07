@@ -38,26 +38,46 @@ def add_metric_to_dict(metric, aliases: list = None) -> Callable:
     return metric
 
 
-def minimize_metric(metric, aliases: list = None) -> Callable:
+def add_metric_info(info):
     """
-    A decorator for metrics that should be minimized.
-    :param metric: the metric to be minimized
-    :param aliases: a list of aliases for the metric
+    A decorator that adds information about the metric.
+    :param info: information about the metric
     :return: decorated metric
     """
-    metric.minmax = "min"
-    return add_metric_to_dict(metric, aliases)
+
+    def decorator(metric):
+        metric.info = PrintableProperty(info)
+        return metric
+
+    return decorator
 
 
-def maximize_metric(metric, aliases: list = None) -> Callable:
+def maximize_metric(aliases: list = None) -> Callable:
     """
     A decorator for metrics that should be maximized.
-    :param metric: the metric to be maximized
     :param aliases: a list of aliases for the metric
     :return: decorated metric
     """
-    metric.minmax = "max"
-    return add_metric_to_dict(metric, aliases)
+
+    def decorator(metric):
+        metric.minmax = "max"
+        return add_metric_to_dict(metric, aliases)
+
+    return decorator
+
+
+def minimize_metric(aliases: list = None) -> Callable:
+    """
+    A decorator for metrics that should be minimized.
+    :param aliases: a list of aliases for the metric
+    :return: decorated metric
+    """
+
+    def decorator(metric):
+        metric.minmax = "min"
+        return add_metric_to_dict(metric, aliases)
+
+    return decorator
 
 
 class PrintableProperty:
