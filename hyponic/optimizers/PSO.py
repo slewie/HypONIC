@@ -40,6 +40,7 @@ class PSO(BaseOptimizer):
         condition = all(self._minmax()(np.concatenate([self.p_best, fitness])) != self.p_best)
 
         self.p_best_coords = np.where(condition, self.coords, self.p_best_coords)
+
         self.p_best = np.where(condition, fitness, self.p_best)
         self._update_global_best()
 
