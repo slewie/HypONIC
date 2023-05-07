@@ -26,7 +26,7 @@ def recall(y_true: np.array, y_pred: np.array) -> np.ndarray:
 
 
 @maximize_metric
-def f1(y_true: np.array, y_pred: np.array) -> np.ndarray:
+def f1_score(y_true: np.array, y_pred: np.array) -> np.ndarray:
     p = precision(y_true, y_pred)
     r = recall(y_true, y_pred)
     return 2 * p * r / (p + r)
@@ -46,6 +46,11 @@ def confusion_matrix(y_true: np.array, y_pred: np.array) -> np.ndarray:
     fn = np.sum(np.logical_and(y_true == 1, y_pred == 0))
     tn = np.sum(np.logical_and(y_true == 0, y_pred == 0))
     return np.array([[tp, fp], [fn, tn]])
+
+
+@minimize_metric
+def log_loss(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    return np.mean(np.log(1 + np.exp(-y_true * y_pred)))
 
 
 @minimize_metric

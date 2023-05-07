@@ -45,8 +45,3 @@ def adjusted_r2(y_true: np.array, y_pred: np.array) -> np.ndarray:
 def huber_loss(y_true: np.array, y_pred: np.array, delta: float = 1.0) -> np.ndarray:
     error = y_true - y_pred
     return np.where(np.abs(error) <= delta, 0.5 * np.square(error), delta * (np.abs(error) - 0.5 * delta))
-
-
-@minimize_metric
-def log_loss(y_true: np.array, y_pred: np.array) -> np.ndarray:
-    return np.mean(np.log(1 + np.exp(-y_true * y_pred)))
