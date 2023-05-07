@@ -3,13 +3,48 @@
 *HypONIC* is a hyperparameter optimization library that uses various nature inspired computing algorithms to optimize
 the hyperparameters of machine learning models. The library provides a simple interface for sklearn and keras models.
 
+## Library Structure
+```
+|-- hyponic/
+|   |-- hyponic.py
+|   |-- space.py
+|   |
+|   |-- metrics/
+|   |   |-- classification.py
+|   |   |-- regression.py
+|   |   |-- decorators.py
+|   |
+|   |-- optimizers/
+|   |   |-- base_optimizer.py
+|   |   |
+|   |   |-- swarm_based/
+|   |   |   |-- ABC.py
+|   |   |   |-- ACO.py
+|   |   |   |-- PSO.py
+|   |   |
+|   |   |-- physics_based/
+|   |   |   |-- SA.py
+|   |   |
+|   |   |-- genetic_based/
+|   |       |-- GA.py
+|   |
+|   |-- space/
+|   |   |-- encoders.py
+|   |   |-- mappers.py
+|   |
+|   |-- utils/
+|
+|-- examples/
+|   |-- datasets/
+```
+
 ## Implementation details
 *HypONIC* library follows a common high-level approach by providing a unified interface for applying an optimization algorithm
 of choice to the parameters of a machine learning model (based on the `BaseEstimator` from the `sklearn`). Evalution of the
 optimization process is done by a metric of choice.
 
 ### Metrics
-*HypONIC* provides a list of classical evalution metrics:
+*HypONIC* provides a list of classical evaluation metrics:
 
 - Mean Squared Error
 - Mean Absolute Error
@@ -28,7 +63,8 @@ optimization process is done by a metric of choice.
 allows using names of the metric functions as string literals instead of passing the function itself, i.e.
 
 ```python
-from hyponic.optimizer import HypONIC
+from hyponic.hyponic import HypONIC
+
 ...
 hyponic = HypONIC(model, X, y, "mse", **optimizer_kwargs)
 ...
@@ -37,8 +73,9 @@ hyponic = HypONIC(model, X, y, "mse", **optimizer_kwargs)
 instead of
 
 ```python
-from hyponic.optimizer import HypONIC
+from hyponic.hyponic import HypONIC
 from hyponic.metrics import mse
+
 ...
 hyponic = HypONIC(model, X, y, mse, **optimizer_kwargs)
 ...
@@ -50,14 +87,14 @@ dimensions of discrete and continuous parameters. The notation for each space is
 
 ```python
 hyperparams = {
-    "min_impurity_decrease": (0.0, 0.9),              # Continious space -- (lower bound, upper bound)
+    "min_impurity_decrease": (0.0, 0.9),              # Continuous space -- (lower bound, upper bound)
     "min_samples_split": [2, 3, 4, 5, 6],             # Discrete space   -- a list of values of any type
     "criterion": ["absolute_error", "squared_error"]  # Discrete space   -- a list of values of any type
 }
 ```
 
-For the discrete space an automatic uniform mapping* to the continious space is provided if needed. Discrete space of
-non numerical values is encoded first and then uniformly mapped to the continious space.
+For the discrete space an automatic uniform mapping* to the continuous space is provided if needed. Discrete space of
+non numerical values is encoded first and then uniformly mapped to the continuous space.
 
 *is subject to change
 
@@ -81,7 +118,7 @@ The following algorithms are currently implemented or are planned to be implemen
 - - [x] Simulated Annealing (SA)
 
 **Genetic-based:**
-- - [x] Genetic Algorithm
+- - [x] Genetic Algorithm (GA)
 
 ## Minimal Example
 
@@ -92,16 +129,16 @@ from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 
 from hyponic.metrics import mse
-from hyponic.optimizer import HypONIC
+from hyponic.hyponic import HypONIC
 
 X, y = load_diabetes(return_X_y=True)
 model = RandomForestRegressor()
 
 hyperparams = {
-    "min_samples_split": (0.01, 0.9),  # Continious space
-    "min_samples_leaf": (0.01, 0.9),  # Continious space
-    "min_weight_fraction_leaf": (0.0, 0.5),  # Continious space
-    "min_impurity_decrease": (0.0, 0.9),  # Continious space
+    "min_samples_split": (0.01, 0.9),  # Continuous space
+    "min_samples_leaf": (0.01, 0.9),  # Continuous space
+    "min_weight_fraction_leaf": (0.0, 0.5),  # Continuous space
+    "min_impurity_decrease": (0.0, 0.9),  # Continuous space
     "criterion": ["absolute_error", "squared_error"]  # Discrete space
 }
 
@@ -110,7 +147,8 @@ optimizer_kwargs = {
     "pop_size": 50,
 }
 
-# The default optimizator is the Inertia Weight Particle Swarm Optimization (IWPSO)
+# The default optimization algorithm is
+# the Inertia Weight Particle Swarm Optimization (IWPSO)
 hyponic = HypONIC(model, X, y, mse, **optimizer_kwargs)
 hyponic.optimize(hyperparams, verbose=True)
 
