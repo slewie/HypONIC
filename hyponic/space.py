@@ -140,11 +140,11 @@ class Continuous(Dimension):
 
 class Discrete(Dimension):
     def __init__(self, values, name=None):
-        super().__init__(0, len(values) - 1, name)
+        super().__init__(0, len(values), name)
         self.values = np.array(values)
 
     def get_value(self, x):
-        # Note that x is already in the correct range. No need to clip.
+        x = np.clip(x, 0, len(self.values) - 1)
         return self.values[int(x)]
 
     def __str__(self):
