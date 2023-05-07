@@ -6,28 +6,28 @@ from hyponic.metrics.decorators import add_metric_aliases, add_metric_info, maxi
 import numpy as np
 
 
-@add_metric_aliases(["mean_absolute_error"])
+@add_metric_aliases("mean_absolute_error")
 @add_metric_info("Mean Absolute Error (MAE) is the average of the absolute errors.")
 @minimize_metric
 def mae(y_true: np.array, y_pred: np.array) -> np.ndarray:
     return np.mean(np.abs(y_true - y_pred))
 
 
-@add_metric_aliases(["mean_squared_error"])
+@add_metric_aliases("mean_squared_error")
 @add_metric_info("Mean Squared Error (MSE) is the average of the squares of the errors.")
 @minimize_metric
 def mse(y_true: np.array, y_pred: np.array) -> np.ndarray:
     return np.mean(np.square(y_true - y_pred))
 
 
-@add_metric_aliases(["root_mean_squared_error"])
+@add_metric_aliases("root_mean_squared_error")
 @add_metric_info("Root Mean Squared Error (RMSE) is the square root of the average of the squared errors.")
 @minimize_metric
 def rmse(y_true: np.array, y_pred: np.array) -> np.ndarray:
     return np.sqrt(mse(y_true, y_pred))
 
 
-@add_metric_aliases(["root_mean_squared_log_error"])
+@add_metric_aliases("root_mean_squared_log_error")
 @add_metric_info("Root Mean Squared Log Error (RMSLE) is the log of the square root of"
                  "the average of the squared errors.")
 @minimize_metric

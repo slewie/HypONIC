@@ -1,37 +1,48 @@
-from typing import Callable, Any
+"""
+This module contains the Space class, which is used to define the search space.
+"""
+import numpy as np
 
-from numpy import clip
+from typing import Callable, Any
 
 
 class Space:
+    """
+    A class that represents the search space of a hyperparameter optimization problem.
+    """
     def __init__(self, in_dict: dict[str, Any]):
         self.__dict = dict
         self.dimensions = {}
         self.dimensions_names = []
 
-        for key, value in in_dict.items():
+        for k, v in in_dict.items():
             # Converting range to list
-            if isinstance(value, range):
-                value = list(value)
+            if isinstance(v, range):
+                v = list(v)
 
-            if isinstance(value, tuple):
-                if len(value) != 2:
-                    raise ValueError(f'Value for key {key} is not valid')
-                self.dimensions[key] = Continuous(*value, name=key)
-            elif isinstance(value, list):
-                self.dimensions[key] = Discrete(value, name=key)
+            if isinstance(v, Discrete):
+                self.dimensions[k] = v
+            elif isinstance(v, Continuous):
+                self.dimensions[k] = v
+            elif isinstance(v, tuple):
+                if len(v) != 2:
+                    raise ValueError(f"Value for key {k} is not valid")
+
+                self.dimensions[k] = Continuous(*v, name=k)
+            elif isinstance(v, list):
+                self.dimensions[k] = Discrete(v, name=k)
             else:
-                raise ValueError(f'Value for key {key} is not valid')
+                raise ValueError(f"Value for key {k} is not valid")
 
-            self.dimensions_names.append(key)
+            self.dimensions_names.append(k)
 
     def get_continuous_mappings(
             self, scales: dict | int | float = None, origins: dict | int | float = None
     ) -> dict[str, (Callable, (float, float))]:
-
         """
         Returns a function that maps a discrete value to a continuous value.
         """
+
         if scales is None:
             scales = {}
         elif isinstance(scales, (int, float)):
@@ -61,11 +72,19 @@ class Space:
         }
 
     def __str__(self):
-        out = f"Space with {len(self.dimensions)} dimensions"
-        for key in self.dimensions:
-            # TODO: pretty print
-            out += f"\n\t{key}:\t{self.dimensions[key]}"
-        return out
+        if len(self.dimensions) == 0:
+            return "Hyperparameter Search Space is empty."
+
+        # Pretty table of dimensions
+        dim_names = list(self.dimensions.keys())
+        offset = max([len(k) for k in dim_names])
+
+        out_strs = [f"Hyperparameter Search Space with {len(dim_names)} dimensions:"]
+        out_strs += [
+            f"\t{k}: {'-'*(offset - len(k))} {self.dimensions[k]}" for k in dim_names
+        ]
+
+        return "\n".join(out_strs)
 
 
 class Dimension:
@@ -88,7 +107,7 @@ class Dimension:
         high = origin + (self._ubound - self._lbound) * scale
 
         def mapping_func(x):
-            x = clip(x, low, high)
+            x = np.clip(x, low, high)
             x = self._lbound + (x - origin) / scale
             return self.get_value(x)
 
@@ -98,7 +117,7 @@ class Dimension:
         raise NotImplementedError
 
     def __str__(self):
-        return f"{self.__class__.__name__}({self._lbound}, {self._ubound})"
+        return self.__class__.__name__
 
     def __repr__(self):
         return self.__str__()
@@ -110,16 +129,26 @@ class Continuous(Dimension):
 
     def get_value(self, x):
         # Note that x is already in the correct range. No need to clip.
-        # > maybe add transformation here? E.g. log, exp, etc.
-        # TODO: non-linear mapping
         return x
+
+    def __str__(self):
+        return super().__str__() + f"({self._lbound}, {self._ubound})"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Discrete(Dimension):
     def __init__(self, values, name=None):
         super().__init__(0, len(values) - 1, name)
-        self.values = values
+        self.values = np.array(values)
 
     def get_value(self, x):
         # Note that x is already in the correct range. No need to clip.
         return self.values[int(x)]
+
+    def __str__(self):
+        return super().__str__() + f"{self.values}"
+
+    def __repr__(self):
+        return self.__str__()
