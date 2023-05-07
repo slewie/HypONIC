@@ -1,8 +1,6 @@
 from typing import Callable, Any
 
-
-def clip(x, low, high):
-    return max(low, min(x, high))
+from numpy import clip
 
 
 class Space:

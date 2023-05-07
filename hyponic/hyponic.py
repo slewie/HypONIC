@@ -10,6 +10,11 @@ from functools import partial
 
 
 class HypONIC:
+    """
+    HypONIC (Hyperparameter Optimization using Nature-Inspired Computing)
+
+    Main class for hyperparameter optimization.
+    """
     def __init__(self, model, X, y, metric: Callable | str, optimizer=None, **kwargs):
         self.model = model
         self.X = X

@@ -16,7 +16,7 @@ class BaseOptimizer(ABC):
         self.ub = None
         self.minmax = kwargs.get('minmax', None)
 
-        self.interval_len = None
+        self.intervals = None
         self.dimensions = None
 
     @abstractmethod
