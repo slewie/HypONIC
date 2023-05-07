@@ -15,25 +15,12 @@ class PSO(BaseOptimizer):
         self.g_best = np.inf
         self.g_best_coords = None
 
-    def _minmax(self):
-        if self.minmax == 'min':
-            return np.min
-        return np.max
-
-    def _argminmax(self):
-        if self.minmax == 'min':
-            return np.argmin
-        return np.argmax
-
     def initialize(self, problem_dict):
         # TODO: add multithreading and multiprocessing
         # TODO: check if the problem_dict is valid
         # TODO: if lb and ub are not provided, use the default values
-        self.function = problem_dict['fit_func']
-        self.lb = np.array(problem_dict['lb'])
-        self.ub = np.array(problem_dict['ub'])
-        self.minmax = problem_dict['minmax'] if self.minmax is None else self.minmax
-        self.dimensions = len(self.lb)
+        super().initialize(problem_dict)
+
         self.coords = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
         max_velocity = self.ub - self.lb
 
@@ -42,7 +29,7 @@ class PSO(BaseOptimizer):
         self.p_best = np.array([self.function(self.coords[i]) for i in range(self.population_size)])
         self._update_global_best()
 
-    def evolve(self):
+    def evolve(self, epoch):
         self.velocities = self._update_velocity()
         self.coords = self.coords + self.velocities
 
