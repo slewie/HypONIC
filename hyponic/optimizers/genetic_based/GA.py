@@ -1,9 +1,9 @@
-import numpy as np
-
 from hyponic.optimizers.base_optimizer import BaseOptimizer
 
+import numpy as np
 
-class GeneticAlgorithm(BaseOptimizer):
+
+class GA(BaseOptimizer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.population = None

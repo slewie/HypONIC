@@ -1,7 +1,7 @@
 from hyponic.optimizers.base_optimizer import BaseOptimizer
+
 import numpy as np
 from copy import deepcopy
-
 
 class ABC(BaseOptimizer):
     def __init__(self, **kwargs):

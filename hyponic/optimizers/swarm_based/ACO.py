@@ -1,8 +1,9 @@
-import numpy as np
 from hyponic.optimizers.base_optimizer import BaseOptimizer
 
+import numpy as np
 
-class AntColonyOptimization(BaseOptimizer):
+
+class ACO(BaseOptimizer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.alpha = kwargs.get('alpha', 1)

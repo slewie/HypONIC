@@ -1,7 +1,7 @@
 from warnings import warn
 
-from hyponic.optimizers.PSO import IWPSO
-from hyponic.metrics import METRICS_DICT
+from hyponic.optimizers.swarm_based.PSO import IWPSO
+from hyponic.metrics.decorators import METRICS_DICT
 
 from typing import Callable
 
@@ -10,6 +10,11 @@ from functools import partial
 
 
 class HypONIC:
+    """
+    HypONIC (Hyperparameter Optimization using Nature-Inspired Computing)
+
+    Main class for hyperparameter optimization.
+    """
     def __init__(self, model, X, y, metric: Callable | str, optimizer=None, **kwargs):
         self.model = model
         self.X = X
@@ -44,9 +49,9 @@ class HypONIC:
         self.metric_optimized = None
 
     @staticmethod
-    def not_optimized_error(func):
+    def warn_not_optimized(func):
         """
-        Decorator for checking if model is optimized
+        Decorator that warns if a method is called before optimization.
         """
 
         def wrapper(*args, **kwargs):
@@ -112,16 +117,16 @@ class HypONIC:
 
         return hyperparams_optimized, metric_optimized
 
-    @not_optimized_error
+    @warn_not_optimized
     def get_optimized_model(self):
         self.model.set_params(**self.hyperparams_optimized)
         self.model.fit(self.X, self.y)
         return self.model
 
-    @not_optimized_error
+    @warn_not_optimized
     def get_optimized_parameters(self) -> dict:
         return self.hyperparams_optimized
 
-    @not_optimized_error
+    @warn_not_optimized
     def get_optimized_metric(self) -> float:
         return self.metric_optimized
