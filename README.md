@@ -128,7 +128,7 @@ This is a minimal example for tuning hyperparameters of the `RandomForestRegress
 from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 
-from hyponic.metrics import mse
+from hyponic.metrics.regression import mse
 from hyponic.hyponic import HypONIC
 
 X, y = load_diabetes(return_X_y=True)
