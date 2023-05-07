@@ -13,6 +13,7 @@ because one metric can have multiple aliases, and the user can pass any of
 them to the HypONIC class as a string.
 """
 from collections import defaultdict
+from functools import partial
 from typing import Callable
 
 """
@@ -21,24 +22,34 @@ A dictionary of aliased metrics to which metrics are added when they are decorat
 METRICS_DICT = defaultdict()
 
 
-def add_metric_to_dict(metric, aliases: list = None) -> Callable:
+def add_metric_to_dict(metric) -> Callable:
+    METRICS_DICT[metric.__name__] = metric
+    return metric
+
+
+def add_aliases_to_dict(metric, aliases: list) -> Callable:
     """
-    A decorator that adds the metric to the dictionary of metrics.
-    :param metric: the metric to be added to the dictionary
+    A decorator that adds aliases of the metric to the dictionary of metrics.
+    :param metric: the metric to add aliases to
     :param aliases: a list of aliases for the metric
     :return: decorated metric
     """
-    METRICS_DICT[metric.__name__] = metric
-
-    # Add aliases to the dictionary
-    if aliases is not None:
-        for alias in aliases:
-            METRICS_DICT[alias] = metric
+    for alias in aliases:
+        METRICS_DICT[alias] = metric
 
     return metric
 
 
-def add_metric_info(info):
+def add_metric_aliases(aliases: list) -> Callable:
+    """
+    A decorator that adds aliases to the metric.
+    :param aliases: a list of aliases for the metric
+    :return: decorated metric
+    """
+    return partial(add_aliases_to_dict, aliases=aliases)
+
+
+def add_metric_info(info) -> Callable:
     """
     A decorator that adds information about the metric.
     :param info: information about the metric
@@ -52,32 +63,22 @@ def add_metric_info(info):
     return decorator
 
 
-def maximize_metric(aliases: list = None) -> Callable:
+def maximize_metric(metric) -> Callable:
     """
     A decorator for metrics that should be maximized.
-    :param aliases: a list of aliases for the metric
-    :return: decorated metric
+    :param metric: the metric that should be maximized
     """
-
-    def decorator(metric):
-        metric.minmax = "max"
-        return add_metric_to_dict(metric, aliases)
-
-    return decorator
+    metric.minmax = "max"
+    return add_metric_to_dict(metric)
 
 
-def minimize_metric(aliases: list = None) -> Callable:
+def minimize_metric(metric) -> Callable:
     """
     A decorator for metrics that should be minimized.
-    :param aliases: a list of aliases for the metric
-    :return: decorated metric
+    :param metric: the metric that should be minimized
     """
-
-    def decorator(metric):
-        metric.minmax = "min"
-        return add_metric_to_dict(metric, aliases)
-
-    return decorator
+    metric.minmax = "min"
+    return add_metric_to_dict(metric)
 
 
 class PrintableProperty:

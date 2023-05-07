@@ -1,8 +1,8 @@
 from sklearn.svm import SVR
 from sklearn.datasets import load_wine
 
-from hyponic.optimizers.ABC import ABC
-from hyponic.optimizer import HypONIC
+from hyponic.optimizers.swarm_based.ABC import ABC
+from hyponic.hyponic import HypONIC
 
 X, y = load_wine(return_X_y=True)
 model = SVR()

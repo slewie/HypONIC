@@ -1,8 +1,8 @@
 from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 
-from hyponic.metrics import mse
-from hyponic.optimizer import HypONIC
+from hyponic.metrics.regression import mse
+from hyponic.hyponic import HypONIC
 
 X, y = load_diabetes(return_X_y=True)
 model = RandomForestRegressor()
