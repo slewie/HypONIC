@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+
 
 
 class BaseOptimizer(ABC):
@@ -15,9 +17,13 @@ class BaseOptimizer(ABC):
         self.lb = None
         self.ub = None
         self.minmax = kwargs.get('minmax', None)
+        self.n_workers = kwargs.get('n_workers', 12)
 
         self.intervals = None
         self.dimensions = None
+        self.verbose = kwargs.get('verbose', False)
+        self.mode = kwargs.get('mode', 'single')
+        self.coords = None
 
     @abstractmethod
     def initialize(self, problem_dict):
@@ -34,6 +40,39 @@ class BaseOptimizer(ABC):
 
         self.intervals = self.ub - self.lb
         self.dimensions = len(self.lb)
+
+        # Create the population
+        self.coords = self._create_population()
+
+    def _create_individual(self):
+        """
+        Create an individual
+        :return: individual
+        """
+        return np.random.uniform(self.lb, self.ub, self.dimensions)
+
+    def _create_population(self):
+        """
+        Create a population of size self.population_size
+        This method can be parallelized using multithreading or multiprocessing(but multiprocessing doesn't work now)
+
+        :return: population
+        """
+        coords = np.zeros((self.population_size, self.dimensions))
+        if self.mode == 'multithread':
+            with ThreadPoolExecutor(self.n_workers) as executor:
+                list_executor = [executor.submit(self._create_individual) for _ in range(self.population_size)]
+                for f in as_completed(list_executor):
+                    coords[list_executor.index(f)] = f.result()
+        elif self.mode == 'multiprocess':
+            with ProcessPoolExecutor(self.n_workers) as executor:
+                list_executor = [executor.submit(self._create_individual) for _ in range(self.population_size)]
+                for f in as_completed(list_executor):
+                    coords[list_executor.index(f)] = f.result()
+        else:
+            for i in range(self.population_size):
+                coords[i] = self._create_individual()
+        return coords
 
     @abstractmethod
     def evolve(self, current_epoch):
@@ -77,9 +116,11 @@ class BaseOptimizer(ABC):
         :param verbose: if True, prints the best score at each epoch
         :return: None
         """
+        if verbose:
+            self.verbose = True
         self.initialize(problem_dict)
         for current_epoch in range(self.epoch):
             self.evolve(current_epoch)
-            if verbose:
+            if self.verbose:
                 print(f'Epoch: {current_epoch}, Best Score: {self.get_best_score()}')
         return self.get_best_solution(), self.get_best_score()
