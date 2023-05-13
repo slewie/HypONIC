@@ -1,6 +1,7 @@
 from hyponic.optimizers.base_optimizer import BaseOptimizer
 
 import numpy as np
+import numexpr as ne
 
 
 class SA(BaseOptimizer):
@@ -27,21 +28,21 @@ class SA(BaseOptimizer):
         progress = current_epoch / self.epoch
         t = max(0.01, min(1, 1 - progress))
 
-        amplitudes = (np.max(self.intervals) - np.min(self.intervals)) * progress * 0.1
+        amplitudes = ne.evaluate("(_max - _min) * progress * 0.1", local_dict={'_max': np.max(self.intervals), '_min': np.min(self.intervals),'progress': progress})
         deltas = np.random.uniform(-amplitudes / 2, amplitudes / 2, (self.population_size, self.dimensions))
 
-        candidates = self.currents + deltas
+        candidates = ne.evaluate("currents + deltas", local_dict={'currents': self.currents, 'deltas': deltas})
 
         for idx, candidate in enumerate(candidates):
             candidate = np.clip(candidate, self.lb, self.ub)
             candidate_score = self.function(candidate)
 
-            if candidate_score < self.best_score:
+            if candidate_score < self.best_score:  # TODO: check if the problem is minimization or maximization
                 self.best = candidate
                 self.best_score = candidate_score
                 self.currents[idx] = candidate
             else:
-                score_abs_diff = abs(candidate_score - self.best_score)
+                score_abs_diff = ne.evaluate("abs(candidate_score - best_score)", local_dict={'candidate_score': candidate_score, 'best_score': self.best_score})
 
                 if np.random.uniform() < np.exp(-score_abs_diff / t):
                     self.currents[idx] = candidate

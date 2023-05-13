@@ -1,14 +1,14 @@
 from hyponic.optimizers.base_optimizer import BaseOptimizer
 
 import numpy as np
-from copy import deepcopy
+import numexpr as ne
+
 
 class ABC(BaseOptimizer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.limits = kwargs.get('limits', 25)  # The number of trials before abandoning a food source
-        self.coords = None
+        self.limits = kwargs.get('limits', 25)  # The number of trials before abandoning food source
         self.fitness = None
         self.g_best = None
         self.g_best_coords = None
@@ -18,7 +18,6 @@ class ABC(BaseOptimizer):
         super().initialize(problem_dict)
         self.g_best = np.inf if self._minmax() == min else -np.inf
 
-        self.coords = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
         self.fitness = np.array([self.function(self.coords[i]) for i in range(self.population_size)])
 
         self.trials = np.zeros(self.population_size)
@@ -27,8 +26,9 @@ class ABC(BaseOptimizer):
         for i in range(self.population_size):
             k = np.random.choice([j for j in range(self.population_size) if j != i])
             phi = np.random.uniform(-1, 1, self.dimensions)
-            new_coords = self.coords[i] + phi * (self.coords[i] - self.coords[k])
-
+            new_coords = ne.evaluate("coords + phi * (coords - new_coords)", local_dict={'coords': self.coords[i],
+                                                                                         'phi': phi,
+                                                                                         'new_coords': self.coords[k]})
             # TODO: if lb or ub is provided, clip the coordinates
             new_coords = np.clip(new_coords, self.lb, self.ub)
             new_fitness = self.function(new_coords)
@@ -46,7 +46,9 @@ class ABC(BaseOptimizer):
         for i in range(self.population_size):
             k = np.random.choice([j for j in range(self.population_size)], p=probabilities)
             phi = np.random.uniform(-1, 1, self.dimensions)
-            new_coords = self.coords[i] + phi * (self.coords[i] - self.coords[k])
+            new_coords = ne.evaluate("coords + phi * (coords - new_coords)", local_dict={'coords': self.coords[i],
+                                                                                         'phi': phi,
+                                                                                         'new_coords': self.coords[k]})
             new_coords = np.clip(new_coords, self.lb, self.ub)
             new_fitness = self.function(new_coords)
             if self._minmax()(np.array([self.fitness[i], new_fitness])) != self.fitness[i]:
@@ -70,7 +72,7 @@ class ABC(BaseOptimizer):
 
         best_index = self._argminmax()(self.fitness)
         self.g_best = self.fitness[best_index]
-        self.g_best_coords = deepcopy(self.coords[best_index])
+        self.g_best_coords = self.coords[best_index]
 
     def get_best_score(self):
         return self.g_best

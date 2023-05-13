@@ -64,11 +64,6 @@ class BaseOptimizer(ABC):
                 list_executor = [executor.submit(self._create_individual) for _ in range(self.population_size)]
                 for f in as_completed(list_executor):
                     coords[list_executor.index(f)] = f.result()
-        elif self.mode == 'multiprocess':
-            with ProcessPoolExecutor(self.n_workers) as executor:
-                list_executor = [executor.submit(self._create_individual) for _ in range(self.population_size)]
-                for f in as_completed(list_executor):
-                    coords[list_executor.index(f)] = f.result()
         else:
             for i in range(self.population_size):
                 coords[i] = self._create_individual()
