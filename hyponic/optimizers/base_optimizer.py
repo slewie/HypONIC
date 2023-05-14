@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import numpy as np
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
-
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 class BaseOptimizer(ABC):
@@ -25,18 +24,58 @@ class BaseOptimizer(ABC):
         self.mode = kwargs.get('mode', 'single')
         self.coords = None
 
-    @abstractmethod
+    def _before_initialization(self):
+        """
+        This method checks if the problem definition is correct
+        """
+        if not isinstance(self.epoch, int) or self.epoch < 1:
+            raise ValueError("epoch should be a positive integer")
+
+        if not isinstance(self.population_size, int) or self.population_size < 1:
+            raise ValueError("population_size should be a positive integer")
+
+        if self.mode not in ['single', 'multithread']:
+            raise ValueError("mode should be either 'single' or 'multithread'")
+
+        if self.n_workers < 1:  # TODO: n_workers can be -1, which means use all available cores
+            raise ValueError("n_workers should be a positive integer")
+
+    def _check_initialization(self):
+        """
+        This method checks if the problem definition in initialization function is correct
+        """
+        if self.lb is None or self.ub is None:
+            raise ValueError("lb and ub should be provided")
+
+        if not isinstance(self.lb, np.ndarray) or not isinstance(self.ub, np.ndarray):
+            raise ValueError("lb and ub should be numpy arrays")
+
+        if self.lb.shape != self.ub.shape:
+            raise ValueError("lb and ub should have the same shape")
+
+        if np.any(self.lb > self.ub):
+            raise ValueError("lb should be less than ub")
+
+        if self.minmax not in ['min', 'max']:
+            raise ValueError("minmax should be either 'min' or 'max'")
+
+        if self.function is None:
+            raise ValueError("function should be provided")
+
+        if not callable(self.function):
+            raise ValueError("function should be callable")
+
     def initialize(self, problem_dict):
         """
         Initialize the optimizer with the problem dictionary
         :param problem_dict: dictionary containing the problem definition
-        :return: None
         """
         # Unpack the problem dictionary
+        self.minmax = problem_dict['minmax'] if self.minmax is None else self.minmax
         self.function = problem_dict["fit_func"]
         self.lb = np.array(problem_dict["lb"])
         self.ub = np.array(problem_dict["ub"])
-        self.minmax = problem_dict['minmax'] if self.minmax is None else self.minmax
+        self._check_initialization()
 
         self.intervals = self.ub - self.lb
         self.dimensions = len(self.lb)
@@ -95,11 +134,17 @@ class BaseOptimizer(ABC):
         pass
 
     def _minmax(self):
+        """
+        Return the min or max function, depending on the minmax parameter
+        """
         if self.minmax == 'min':
             return np.min
         return np.max
 
     def _argminmax(self):
+        """
+        Return the argmin or argmax function, depending on the minmax parameter
+        """
         if self.minmax == 'min':
             return np.argmin
         return np.argmax
@@ -113,6 +158,7 @@ class BaseOptimizer(ABC):
         """
         if verbose:
             self.verbose = True
+        self._before_initialization()
         self.initialize(problem_dict)
         for current_epoch in range(self.epoch):
             self.evolve(current_epoch)

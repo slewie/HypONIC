@@ -15,6 +15,13 @@ class PSO(BaseOptimizer):
         self.g_best = None
         self.g_best_coords = None
 
+    def _before_initialization(self):
+        super()._before_initialization()
+        if isinstance(self.a1, float) is False and isinstance(self.a1, int) is False:
+            raise ValueError("a1 should be a float or an integer")
+        if isinstance(self.a2, float) is False and isinstance(self.a2, int) is False:
+            raise ValueError("a2 should be a float or an integer")
+
     def initialize(self, problem_dict):
         # TODO: check if the problem_dict is valid
         # TODO: if lb and ub are not provided, use the default values
@@ -73,6 +80,11 @@ class IWPSO(PSO):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.w = kwargs.get('w', 0.8)
+
+    def _before_initialization(self):
+        super()._before_initialization()
+        if isinstance(self.w, float) is False and isinstance(self.w, int) is False:
+            raise ValueError("w should be a float or an integer")
 
     def _update_velocity(self):
         r1 = np.random.random()

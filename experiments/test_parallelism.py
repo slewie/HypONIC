@@ -12,6 +12,9 @@ Single 3(50, 50): 68.50705
 
 Single 2(100, 200): 5.69452
 12 threads 2(100, 200): 6.37028
+
+numba - 9.080
+numexpr - 6.85
 """
 
 from sklearn.datasets import load_diabetes, load_wine
@@ -75,7 +78,8 @@ def run(optimizer_kwargs, test_set, num_iter=15):
         hyponic.optimize(hyperparams)
         end = time.time()
         times[i] = end - start
-
+        print(f"\rIteration {i + 1}/{num_iter} done, time: {times[i]}", end="")
+    print()
     return np.mean(times)
 
 
@@ -86,7 +90,7 @@ def test_single():
         "mode": "single"
     }
     print("Single thread, KNN regression: ", run(optimizer_kwargs, give_test_set1(), num_iter=10))
-    print("Single thread, Decision Tree regression: ", run(optimizer_kwargs, give_test_set2(), num_iter=15))
+    print("Single thread, Decision Tree regression: ", run(optimizer_kwargs, give_test_set2(), num_iter=50))
     print("Single thread, Random Forest classification: ", run(optimizer_kwargs, give_test_set3(), num_iter=5))
 
 
