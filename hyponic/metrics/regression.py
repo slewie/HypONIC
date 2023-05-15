@@ -39,6 +39,7 @@ def rmsle(y_true: np.array, y_pred: np.array) -> np.ndarray:
 
 
 @maximize_metric
+@add_metric_info("R2 score is the proportion of the variance in the dependent variable that is predictable")
 def r2(y_true: np.array, y_pred: np.array) -> np.ndarray:
     ss_res = ne.evaluate("sum((y_true - y_pred) ** 2)")
     sum_y_true = ne.evaluate("sum(y_true)")
@@ -48,6 +49,7 @@ def r2(y_true: np.array, y_pred: np.array) -> np.ndarray:
 
 
 @maximize_metric
+@add_metric_info("Adjusted R2 score is the proportion of the variance in the dependent variable that is predictable")
 def adjusted_r2(y_true: np.array, y_pred: np.array) -> np.ndarray:
     if len(y_true.shape) == 1:
         return r2(y_true, y_pred)
@@ -55,6 +57,7 @@ def adjusted_r2(y_true: np.array, y_pred: np.array) -> np.ndarray:
 
 
 @minimize_metric
+@add_metric_info("Huber loss is a loss function used in robust regression, that is less sensitive to outliers")
 def huber_loss(y_true: np.array, y_pred: np.array, delta: float = 1.0) -> np.ndarray:
     error = y_true - y_pred
     return ne.evaluate("sum(where(abs(error) <= delta, 0.5 * error ** 2, delta * (abs(error) - 0.5 * delta)))")
