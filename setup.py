@@ -18,6 +18,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'numpy>=1.19.2',
+        'numexpr>=2.7.3',
     ],
     classifiers=[
         'Programming Language :: Python :: 3.11',
