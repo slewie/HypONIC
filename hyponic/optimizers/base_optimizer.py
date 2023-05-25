@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from hyponic.utils.history import History
+import time
 
 
 class BaseOptimizer(ABC):
@@ -80,6 +82,9 @@ class BaseOptimizer(ABC):
         self.intervals = self.ub - self.lb
         self.dimensions = len(self.lb)
 
+        # TODO: add flag that tracks history or not
+        self.history = History(optimizer=self, epoch=self.epoch, population_size=self.population_size)
+
         # Create the population
         self.coords = self._create_population()
 
@@ -133,6 +138,22 @@ class BaseOptimizer(ABC):
         """
         pass
 
+    @abstractmethod
+    def get_current_best_score(self):
+        """
+        Get the best score of the current population
+        :return: best score
+        """
+        pass
+
+    @abstractmethod
+    def get_current_best_solution(self):
+        """
+        Get the best solution of the current population
+        :return: best solution
+        """
+        pass
+
     def _minmax(self):
         """
         Return the min or max function, depending on the minmax parameter
@@ -161,7 +182,13 @@ class BaseOptimizer(ABC):
         self._before_initialization()
         self.initialize(problem_dict)
         for current_epoch in range(self.epoch):
+            start = time.time()
             self.evolve(current_epoch)
+            end = time.time()
             if self.verbose:
                 print(f'Epoch: {current_epoch}, Best Score: {self.get_best_score()}')
+            self.history.update_history(current_epoch, end - start)
         return self.get_best_solution(), self.get_best_score()
+
+    def get_history(self):
+        return self.history.get_history()

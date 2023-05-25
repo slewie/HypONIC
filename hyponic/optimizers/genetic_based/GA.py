@@ -76,3 +76,9 @@ class GA(BaseOptimizer):
 
     def get_best_solution(self):
         return self.best_solution
+
+    def get_current_best_score(self):
+        return self._minmax()(self.scores)
+
+    def get_current_best_solution(self):
+        return self.population[self._argminmax()(self.scores)]

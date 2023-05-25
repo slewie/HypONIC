@@ -1,7 +1,6 @@
 import numpy as np
 
 from hyponic.optimizers.swarm_based.ABC import ABC
-from hyponic.optimizers.swarm_based.PSO import PSO, IWPSO
 
 
 def sphere_function(x) -> np.ndarray:
