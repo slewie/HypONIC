@@ -5,10 +5,21 @@ import numexpr as ne
 
 
 class ABC(BaseOptimizer):
-    def __init__(self, **kwargs):
+    def __init__(self, limits=25, **kwargs):
+        """
+        :param epoch: number of iterations
+        :param population_size: number of individuals in the population
+        :param minmax: 'min' or 'max', depending on whether the problem is a minimization or maximization problem
+        :param verbose: whether to print the progress, default is False
+        :param mode: 'single' or 'multithread', depending on whether to use multithreading or not
+        :param n_workers: number of workers to use in multithreading mode
+        :param early_stopping: number of epochs to wait before stopping the optimization process. If None, then early
+        stopping is not used
+        :param limits: the number of trials before abandoning food source
+        """
         super().__init__(**kwargs)
 
-        self.limits = kwargs.get('limits', 25)  # The number of trials before abandoning food source
+        self.limits = limits
         self.fitness = None
         self.g_best = None
         self.g_best_coords = None

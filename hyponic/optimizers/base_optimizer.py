@@ -10,21 +10,24 @@ class BaseOptimizer(ABC):
     Base class for all optimizers. All optimizers should inherit from this class
     """
 
-    def __init__(self, **kwargs):
-        self.epoch = kwargs.get("epoch", 10)
-        self.population_size = kwargs.get("population_size", 10)
+    def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None, verbose: bool = False,
+                 mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None, **kwargs):
+        self.epoch = epoch
+        self.population_size = population_size
 
         self.function = None
         self.lb = None
         self.ub = None
-        self.minmax = kwargs.get('minmax', None)
-        self.n_workers = kwargs.get('n_workers', 12)
+        self.minmax = minmax
 
         self.intervals = None
         self.dimensions = None
-        self.verbose = kwargs.get('verbose', False)
-        self.mode = kwargs.get('mode', 'single')
+        self.verbose = verbose
+        self.mode = mode
+        self.n_workers = n_workers
+
         self.coords = None
+        self.early_stopping = early_stopping
 
     def _before_initialization(self):
         """
@@ -41,6 +44,9 @@ class BaseOptimizer(ABC):
 
         if self.n_workers < 1:  # TODO: n_workers can be -1, which means use all available cores
             raise ValueError("n_workers should be a positive integer")
+        if self.early_stopping is not None:
+            if not isinstance(self.early_stopping, int) or self.early_stopping < 1:
+                raise ValueError("early_stopping should be a positive integer or None")
 
     def _check_initialization(self):
         """
@@ -188,6 +194,10 @@ class BaseOptimizer(ABC):
             if self.verbose:
                 print(f'Epoch: {current_epoch}, Best Score: {self.get_best_score()}')
             self.history.update_history(current_epoch, end - start)
+            if self.history.is_early_stopping(current_epoch, self.early_stopping):
+                if self.verbose:
+                    print(f'Early stopping at epoch {current_epoch}')
+                break
         return self.get_best_solution(), self.get_best_score()
 
     def get_history(self):
