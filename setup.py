@@ -19,6 +19,7 @@ setuptools.setup(
     install_requires=[
         'numpy>=1.19.2',
         'numexpr>=2.7.3',
+        'numba>=0.51.2',
     ],
     classifiers=[
         'Programming Language :: Python :: 3.11',

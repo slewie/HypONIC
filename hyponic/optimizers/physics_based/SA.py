@@ -52,3 +52,9 @@ class SA(BaseOptimizer):
 
     def get_best_solution(self):
         return self.best
+
+    def get_current_best_score(self):
+        return self.function(self.currents[0])
+
+    def get_current_best_solution(self):
+        return self.currents[0]

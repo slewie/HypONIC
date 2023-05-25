@@ -75,6 +75,12 @@ class ACO(BaseOptimizer):
     def get_best_solution(self):
         return self.best_solution
 
+    def get_current_best_score(self):
+        return self._minmax()(self.scores.min())
+
+    def get_current_best_solution(self):
+        return self.population[self.scores.argmin()]
+
     def _initialize_pheromone(self):
         self.pheromone = np.ones((self.population_size, self.dimensions))
 

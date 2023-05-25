@@ -1,7 +1,6 @@
 import numpy as np
 
 from hyponic.optimizers.swarm_based.ABC import ABC
-from hyponic.optimizers.swarm_based.PSO import PSO, IWPSO
 
 
 def sphere_function(x) -> np.ndarray:
@@ -40,3 +39,4 @@ problem_dict = {
 abc.solve(problem_dict)
 print(abc.get_best_score())
 print(abc.get_best_solution())
+abc.visualize_history_time()

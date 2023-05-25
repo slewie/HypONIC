@@ -68,6 +68,9 @@ class ABC(BaseOptimizer):
         self._scout_bees_phase()
 
         best_index = self._argminmax()(self.fitness)
+        # if self._minmax()(np.array([self.fitness[best_index], self.g_best])) != self.g_best:
+        #     self.g_best = self.fitness[best_index]
+        #     self.g_best_coords = self.coords[best_index]
         self.g_best = self.fitness[best_index]
         self.g_best_coords = self.coords[best_index]
 
@@ -76,3 +79,10 @@ class ABC(BaseOptimizer):
 
     def get_best_solution(self):
         return self.g_best_coords
+
+    def get_current_best_score(self):
+        return self._minmax()(self.fitness)
+
+    def get_current_best_solution(self):
+        best_index = self._argminmax()(self.fitness)
+        return self.coords[best_index]
