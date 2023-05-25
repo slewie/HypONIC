@@ -191,4 +191,19 @@ class BaseOptimizer(ABC):
         return self.get_best_solution(), self.get_best_score()
 
     def get_history(self):
+        """
+        Get the history of the optimizer
+        """
         return self.history.get_history()
+
+    def visualize_history_fitness(self):
+        """
+        Visualize the fitness history
+        """
+        self.history.visualize_fitness()
+
+    def visualize_history_time(self):
+        """
+        Visualize the time history
+        """
+        self.history.visualize_time()

@@ -39,3 +39,4 @@ problem_dict = {
 abc.solve(problem_dict)
 print(abc.get_best_score())
 print(abc.get_best_solution())
+abc.visualize_history_time()
