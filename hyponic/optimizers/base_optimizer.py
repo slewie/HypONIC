@@ -10,24 +10,23 @@ class BaseOptimizer(ABC):
     Base class for all optimizers. All optimizers should inherit from this class
     """
 
-    def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None, verbose: bool = False,
-                 mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None, **kwargs):
-        self.epoch = epoch
-        self.population_size = population_size
+    def __init__(self, **kwargs):
+        self.epoch = None
+        self.population_size = None
 
         self.function = None
         self.lb = None
         self.ub = None
-        self.minmax = minmax
+        self.minmax = None
 
         self.intervals = None
         self.dimensions = None
-        self.verbose = verbose
-        self.mode = mode
-        self.n_workers = n_workers
+        self.verbose = None
+        self.mode = None
+        self.n_workers = None
 
         self.coords = None
-        self.early_stopping = early_stopping
+        self.early_stopping = None
 
     def _before_initialization(self):
         """

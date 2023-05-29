@@ -5,8 +5,18 @@ import numexpr as ne
 
 
 class GA(BaseOptimizer):
-    def __init__(self, **kwargs):
+    def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None,
+                 verbose: bool = False, mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None,
+                 **kwargs):
         super().__init__(**kwargs)
+        self.epoch = epoch
+        self.population_size = population_size
+        self.minmax = minmax
+        self.verbose = verbose
+        self.mode = mode
+        self.n_workers = n_workers
+        self.early_stopping = early_stopping
+
         self.population = None
         self.scores = None
         self.best_score = None

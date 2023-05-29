@@ -17,7 +17,7 @@ hyperparams = {
 
 optimizer_kwargs = {
     "epoch": 50,
-    "pop_size": 50,
+    "population_size": 50
 }
 
 hyponic = HypONIC(model, X, y, mse, **optimizer_kwargs)

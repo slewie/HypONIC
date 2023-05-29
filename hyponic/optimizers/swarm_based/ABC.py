@@ -5,7 +5,9 @@ import numexpr as ne
 
 
 class ABC(BaseOptimizer):
-    def __init__(self, limits=25, **kwargs):
+    def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None, limits=25,
+                 verbose: bool = False, mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None,
+                 **kwargs):
         """
         :param epoch: number of iterations
         :param population_size: number of individuals in the population
@@ -18,6 +20,13 @@ class ABC(BaseOptimizer):
         :param limits: the number of trials before abandoning food source
         """
         super().__init__(**kwargs)
+        self.epoch = epoch
+        self.population_size = population_size
+        self.minmax = minmax
+        self.verbose = verbose
+        self.mode = mode
+        self.n_workers = n_workers
+        self.early_stopping = early_stopping
 
         self.limits = limits
         self.fitness = None

@@ -9,8 +9,17 @@ class SA(BaseOptimizer):
     Simulated Annealing
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None,
+                 verbose: bool = False, mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None,
+                 **kwargs):
         super().__init__(**kwargs)
+        self.epoch = epoch
+        self.population_size = population_size
+        self.minmax = minmax
+        self.verbose = verbose
+        self.mode = mode
+        self.n_workers = n_workers
+        self.early_stopping = early_stopping
 
         self.currents = None
         self.best = None
@@ -28,7 +37,9 @@ class SA(BaseOptimizer):
         progress = current_epoch / self.epoch
         t = max(0.01, min(1, 1 - progress))
 
-        amplitudes = ne.evaluate("(_max - _min) * progress * 0.1", local_dict={'_max': np.max(self.intervals), '_min': np.min(self.intervals),'progress': progress})
+        amplitudes = ne.evaluate("(_max - _min) * progress * 0.1",
+                                 local_dict={'_max': np.max(self.intervals), '_min': np.min(self.intervals),
+                                             'progress': progress})
         deltas = np.random.uniform(-amplitudes / 2, amplitudes / 2, (self.population_size, self.dimensions))
 
         candidates = ne.evaluate("currents + deltas", local_dict={'currents': self.currents, 'deltas': deltas})
@@ -42,7 +53,9 @@ class SA(BaseOptimizer):
                 self.best_score = candidate_score
                 self.currents[idx] = candidate
             else:
-                score_abs_diff = ne.evaluate("abs(candidate_score - best_score)", local_dict={'candidate_score': candidate_score, 'best_score': self.best_score})
+                score_abs_diff = ne.evaluate("abs(candidate_score - best_score)",
+                                             local_dict={'candidate_score': candidate_score,
+                                                         'best_score': self.best_score})
 
                 if np.random.uniform() < np.exp(-score_abs_diff / t):
                     self.currents[idx] = candidate

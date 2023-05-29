@@ -4,12 +4,21 @@ import numpy as np
 
 
 class ACO(BaseOptimizer):
-    def __init__(self, **kwargs):
+    def __init__(self,epoch: int = 10, population_size: int = 10, minmax: str = None, alpha: float = 1, beta: float = 1, rho: float = 0.5, q: float = 1,
+                 verbose: bool = False, mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None, **kwargs):
         super().__init__(**kwargs)
-        self.alpha = kwargs.get('alpha', 1)
-        self.beta = kwargs.get('beta', 1)
-        self.rho = kwargs.get('rho', 0.5)
-        self.q = kwargs.get('q', 1)
+        self.epoch = epoch
+        self.population_size = population_size
+        self.minmax = minmax
+        self.verbose = verbose
+        self.mode = mode
+        self.n_workers = n_workers
+        self.early_stopping = early_stopping
+
+        self.alpha = alpha
+        self.beta = beta
+        self.rho = rho
+        self.q = q
 
         self.pheromone = None
         self.population = None
