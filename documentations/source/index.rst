@@ -12,7 +12,7 @@ Welcome to HypONIC's documentation!
     pages/quick_start.rst
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :caption: Models:
 
    pages/models.rst

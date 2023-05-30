@@ -5,6 +5,34 @@ import numexpr as ne
 
 
 class PSO(BaseOptimizer):
+    """
+    Particle Swarm Optimization (PSO) algorithm
+
+    Hyperparameters:
+        + a1(float), default=0.5: acceleration parameter
+        + a2(float), default=0.5: acceleration parameter
+
+    Example
+    ~~~~~~~
+    >>> from hyponic.optimizers.swarm_based.PSO import PSO
+    >>> import numpy as np
+    >>>
+    >>> def sphere(x):
+    >>>     return np.sum(x ** 2)
+    >>>
+    >>> problem_dict = {
+    >>>     'fit_func': sphere,
+    >>>     'lb': [-5.12, -5, -14, -6, -0.9],
+    >>>     'ub': [5.12, 5, 14, 6, 0.9],
+    >>>     'minmax': 'min'
+    >>> }
+    >>>
+    >>> a1, a2 = 0.8, 0.4
+    >>> pso = PSO(epoch=40, population_size=100, verbose=True, early_stopping=4, a1=a1, a2=a2)
+    >>> pso.solve(problem_dict)
+    >>> print(pso.get_best_score())
+    >>> print(pso.get_best_solution())
+    """
     def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None, a1: float = 0.5, a2: float = 0.5,
                  verbose: bool = False, mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None,
                  **kwargs):
@@ -102,6 +130,33 @@ class PSO(BaseOptimizer):
 class IWPSO(PSO):
     """
     Inertia Weight Particle Swarm Optimization
+
+    Hyperparameters:
+        + a1(float), default=0.5: acceleration parameter
+        + a2(float), default=0.5: acceleration parameter
+        + w(float), default=0.5: inertia weight
+
+    Example
+    ~~~~~~~
+    >>> from hyponic.optimizers.swarm_based.PSO import IWPSO
+    >>> import numpy as np
+    >>>
+    >>> def sphere(x):
+    >>>     return np.sum(x ** 2)
+    >>>
+    >>> problem_dict = {
+    >>>     'fit_func': sphere,
+    >>>     'lb': [-5.12, -5, -14, -6, -0.9],
+    >>>     'ub': [5.12, 5, 14, 6, 0.9],
+    >>>     'minmax': 'min'
+    >>> }
+    >>>
+    >>> a1, a2 = 0.8, 0.4
+    >>> w = 0.3
+    >>> iwpso = IWPSO(epoch=40, population_size=100, verbose=True, early_stopping=4, a1=a1, a2=a2, w=w)
+    >>> iwpso.solve(problem_dict)
+    >>> print(iwpso.get_best_score())
+    >>> print(iwpso.get_best_solution())
     """
 
     def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None, a1: float = 0.5, a2: float = 0.5,

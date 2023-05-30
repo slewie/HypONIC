@@ -5,7 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    optimizers/genetic_based
    optimizers/physics_based
@@ -27,4 +27,6 @@ hyponic.space module
 --------------------
 
 .. automodule:: hyponic.space
+   :members:
+   :no-undoc-members:
    :show-inheritance:

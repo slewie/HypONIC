@@ -8,6 +8,13 @@ hyponic.optimizers.swarm\_based.ABC module
    :undoc-members:
    :show-inheritance:
 
+hyponic.optimizers.swarm\_based.ACO module
+------------------------------------------
+.. automodule:: hyponic.optimizers.swarm_based.ACO
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hyponic.optimizers.swarm\_based.PSO module
 ------------------------------------------
 .. automodule:: hyponic.optimizers.swarm_based.PSO
@@ -15,9 +22,3 @@ hyponic.optimizers.swarm\_based.PSO module
    :undoc-members:
    :show-inheritance:
 
-hyponic.optimizers.swarm\_based.ACO module
-------------------------------------------
-.. automodule:: hyponic.optimizers.swarm_based.ACO
-   :members:
-   :undoc-members:
-   :show-inheritance:

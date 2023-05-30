@@ -29,7 +29,7 @@ def ackley_function(x):
         np.sum(np.cos(2 * np.pi * x)) / len(x)) + 20 + np.exp(1)
 
 
-abc = ABC(epoch=40, population_size=100, minmax='min', verbose=True, early_stopping=4)
+abc = ABC(epoch=40, population_size=100, verbose=True, early_stopping=4)
 problem_dict = {
     'fit_func': ackley_function,
     'lb': [-5.12, -5, -14, -6, -0.9],
