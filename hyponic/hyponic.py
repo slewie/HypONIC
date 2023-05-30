@@ -2,6 +2,7 @@ from warnings import warn
 
 from hyponic.optimizers.swarm_based.PSO import IWPSO
 from hyponic.metrics.decorators import METRICS_DICT
+from hyponic.utils.problem_identifier import ProblemIdentifier, ProblemType
 
 from typing import Callable
 
@@ -15,7 +16,8 @@ class HypONIC:
 
     Main class for hyperparameter optimization.
     """
-    def __init__(self, model, X, y, metric: Callable | str, optimizer=None, **kwargs):
+
+    def __init__(self, model, X, y, metric: Callable | str | None = None, optimizer=None, **kwargs):
         self.model = model
         self.X = X
         self.y = y
@@ -28,6 +30,19 @@ class HypONIC:
                 raise Exception(f"Metric {metric} is not found.")
         elif isinstance(metric, Callable):
             self.metric = metric
+        elif metric is None:
+            # If metric is None, then try to get metric from the problem type
+            problem_type = ProblemIdentifier(self.y).get_problem_type()
+
+            match problem_type:
+                case ProblemType.REGRESSION:
+                    self.metric = METRICS_DICT["mse"]
+                case ProblemType.BINARY_CLASSIFICATION:
+                    self.metric = METRICS_DICT["binary_crossentropy"]
+                case ProblemType.MULTICLASS_CLASSIFICATION:
+                    self.metric = METRICS_DICT["log_loss"]
+        else:
+            raise Exception(f"Metric {metric} is not found.")
 
         try:
             self.minmax = self.metric.__getattribute__("minmax")

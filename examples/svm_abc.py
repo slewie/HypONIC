@@ -1,16 +1,16 @@
-from sklearn.svm import SVR
+from sklearn.svm import SVC
 from sklearn.datasets import load_wine
 
 from hyponic.optimizers.swarm_based.ABC import ABC
 from hyponic.hyponic import HypONIC
 
 X, y = load_wine(return_X_y=True)
-model = SVR()
+model = SVC()
 
 hyperparams = {
     "C": (0.01, 1),
-    "epsilon": (0.01, 0.9),
     "kernel": ["linear", "poly", "rbf", "sigmoid"],
+    "degree": [2, 3, 4, 5],
 }
 
 optimizer_kwargs = {
@@ -18,7 +18,7 @@ optimizer_kwargs = {
     "pop_size": 10,
 }
 
-hyponic = HypONIC(model, X, y, "log_loss", optimizer=ABC, **optimizer_kwargs)
+hyponic = HypONIC(model, X, y, optimizer=ABC, **optimizer_kwargs)
 hyponic.optimize(hyperparams, verbose=True)
 print(hyponic.get_optimized_parameters())
 print(hyponic.get_optimized_metric())

@@ -81,8 +81,9 @@ def log_loss(y_true: np.array, y_pred: np.array) -> np.ndarray:
 @minimize_metric
 @add_metric_info(
     "Binary crossentropy is the negative log-likelihood of the true labels given a probabilistic classifier’s predictions.")
-@nb.njit
+# @nb.njit
 def binary_crossentropy(y_true: np.array, y_pred: np.array) -> np.ndarray:
+    # TODO: fix that logarithm can be negative or zero
     return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
 
 
