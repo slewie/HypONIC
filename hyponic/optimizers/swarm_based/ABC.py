@@ -5,6 +5,33 @@ import numexpr as ne
 
 
 class ABC(BaseOptimizer):
+    """
+    Artificial Bee Colony (ABC) algorithm
+
+    Hyperparameters:
+        + limits(int), default=25: the number of trials before abandoning food source
+
+    Example
+    ~~~~~~~
+    >>> from hyponic.optimizers.swarm_based.ABC import ABC
+    >>> import numpy as np
+    >>>
+    >>> def sphere(x):
+    >>>     return np.sum(x ** 2)
+    >>>
+    >>> problem_dict = {
+    >>>     'fit_func': sphere,
+    >>>     'lb': [-5.12, -5, -14, -6, -0.9],
+    >>>     'ub': [5.12, 5, 14, 6, 0.9],
+    >>>     'minmax': 'min'
+    >>> }
+    >>>
+    >>> abc = ABC(epoch=40, population_size=100, verbose=True, early_stopping=4)
+    >>> abc.solve(problem_dict)
+    >>> print(abc.get_best_score())
+    >>> print(abc.get_best_solution())
+    """
+
     def __init__(self, epoch: int = 10, population_size: int = 10, minmax: str = None, limits=25,
                  verbose: bool = False, mode: str = 'single', n_workers: int = 4, early_stopping: int | None = None,
                  **kwargs):
@@ -88,9 +115,6 @@ class ABC(BaseOptimizer):
         self._scout_bees_phase()
 
         best_index = self._argminmax()(self.fitness)
-        # if self._minmax()(np.array([self.fitness[best_index], self.g_best])) != self.g_best:
-        #     self.g_best = self.fitness[best_index]
-        #     self.g_best_coords = self.coords[best_index]
         self.g_best = self.fitness[best_index]
         self.g_best_coords = self.coords[best_index]
 

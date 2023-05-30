@@ -75,6 +75,7 @@ class BaseOptimizer(ABC):
     def initialize(self, problem_dict):
         """
         Initialize the optimizer with the problem dictionary
+
         :param problem_dict: dictionary containing the problem definition
         """
         # Unpack the problem dictionary
@@ -96,6 +97,7 @@ class BaseOptimizer(ABC):
     def _create_individual(self):
         """
         Create an individual
+
         :return: individual
         """
         return np.random.uniform(self.lb, self.ub, self.dimensions)
@@ -122,8 +124,8 @@ class BaseOptimizer(ABC):
     def evolve(self, current_epoch):
         """
         Evolve the population for one epoch
+
         :param current_epoch: current epoch number
-        :return: None
         """
         pass
 
@@ -131,7 +133,8 @@ class BaseOptimizer(ABC):
     def get_best_score(self):
         """
         Get the best score of the current population
-        :return: best score
+
+        :return: best score of the fitness function
         """
         pass
 
@@ -139,7 +142,8 @@ class BaseOptimizer(ABC):
     def get_best_solution(self):
         """
         Get the best solution of the current population
-        :return: best solution
+
+        :return: coordinates of the best solution
         """
         pass
 
@@ -147,7 +151,8 @@ class BaseOptimizer(ABC):
     def get_current_best_score(self):
         """
         Get the best score of the current population
-        :return: best score
+
+        :return: current best score of the fitness function
         """
         pass
 
@@ -155,13 +160,14 @@ class BaseOptimizer(ABC):
     def get_current_best_solution(self):
         """
         Get the best solution of the current population
-        :return: best solution
+
+        :return: current coordinates of the best solution
         """
         pass
 
     def _minmax(self):
         """
-        Return the min or max function, depending on the minmax parameter
+        :return: the min or max function, depending on the minmax parameter
         """
         if self.minmax == 'min':
             return np.min
@@ -169,7 +175,7 @@ class BaseOptimizer(ABC):
 
     def _argminmax(self):
         """
-        Return the argmin or argmax function, depending on the minmax parameter
+        :return: the argmin or argmax function, depending on the minmax parameter
         """
         if self.minmax == 'min':
             return np.argmin
@@ -178,8 +184,10 @@ class BaseOptimizer(ABC):
     def solve(self, problem_dict, verbose=False):
         """
         Solve the problem
+
         :param problem_dict: dictionary containing the problem definition
         :param verbose: if True, prints the best score at each epoch
+
         :return: None
         """
         if verbose:
