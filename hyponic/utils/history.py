@@ -4,8 +4,12 @@ import matplotlib.pyplot as plt
 
 class History:
     """
-    This class is used to track the history of the optimizer
+    This class is used to track the history of the optimizer. It tracks the global best, current best, and the time of
+    the epoch.
+    Also, it provides methods to visualize the history of the optimizer.
+
     """
+
     def __init__(self, **kwargs):
         self.optimizer = kwargs['optimizer']
         self.epoch = kwargs['epoch']
@@ -55,13 +59,16 @@ class History:
     def visualize(func):
         """
         Decorator to visualize the history of the optimizer
+
         :param func: function to be decorated
         """
+
         def wrapper(*args, **kwargs):
             plt.figure(figsize=(12, 8))
             func(*args, **kwargs)
             plt.legend()
             plt.show()
+
         return wrapper
 
     @visualize
@@ -88,8 +95,10 @@ class History:
     def is_early_stopping(self, current_epoch, early_stopping: int):
         """
         This method checks if the early stopping condition is met
+
         :param current_epoch: current epoch
         :param early_stopping: number of epochs to wait before stopping the optimization
+
         :return: boolean
         """
         if early_stopping is not None and current_epoch >= early_stopping:
@@ -97,5 +106,3 @@ class History:
             if len(last_scores) == early_stopping and np.all(last_scores == last_scores[0]):
                 return True
         return False
-
-
