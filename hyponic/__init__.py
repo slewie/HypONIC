@@ -18,3 +18,6 @@ from .optimizers.swarm_based.PSO import PSO, IWPSO
 from .optimizers.base_optimizer import BaseOptimizer
 
 from .space import Space, Dimension, Continuous, Discrete
+
+from .utils.history import History
+from .utils.problem_identifier import ProblemIdentifier, ProblemType

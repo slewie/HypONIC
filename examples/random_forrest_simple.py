@@ -20,7 +20,7 @@ optimizer_kwargs = {
     "population_size": 50
 }
 
-hyponic = HypONIC(model, X, y, mse, **optimizer_kwargs)
+hyponic = HypONIC(model, X, y, "rmse", **optimizer_kwargs)
 hyponic.optimize(hyperparams, verbose=True)
 
 print(hyponic.get_optimized_parameters())
