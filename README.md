@@ -3,6 +3,7 @@
 *HypONIC* is a hyperparameter optimization library that uses various nature inspired computing algorithms to optimize
 the hyperparameters of machine learning models. The library provides a simple interface for sklearn models.
 
+*Documentation*: https://hyponic.readthedocs.io/en/latest/
 ## Library Structure
 ```
 |-- hyponic/
