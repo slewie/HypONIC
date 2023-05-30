@@ -145,3 +145,11 @@ class HypONIC:
     @warn_not_optimized
     def get_optimized_metric(self) -> float:
         return self.metric_optimized
+
+    @warn_not_optimized
+    def visualize_history_fitness(self):
+        self.optimizer.visualize_history_fitness()
+
+    @warn_not_optimized
+    def visualize_history_time(self):
+        self.optimizer.visualize_history_time()
