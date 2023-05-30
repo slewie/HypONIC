@@ -1,7 +1,7 @@
 # HypONIC -- Hyperparameter Optimization with Nature Inspired Computing
 
 *HypONIC* is a hyperparameter optimization library that uses various nature inspired computing algorithms to optimize
-the hyperparameters of machine learning models. The library provides a simple interface for sklearn and keras models.
+the hyperparameters of machine learning models. The library provides a simple interface for sklearn models.
 
 ## Library Structure
 ```
@@ -33,9 +33,64 @@ the hyperparameters of machine learning models. The library provides a simple in
 |   |   |-- mappers.py  (planned)
 |   |
 |   |-- utils/
-|
+|       |-- history.py
+|       |-- problem_identifier.py
 |-- examples/
     |-- datasets/
+```
+## Installation
+### Install from PyPI
+```bash
+pip install hyponic
+```
+## Minimal Example
+This is a minimal example for tuning hyperparameters of the `SVC` from `sklearn`.
+The default optimization is *Inertia Weight Particle Swarm Optimization* (IWPSO),
+as it has high applicability and has shown fast convergence.
+
+```python
+# 1. Import of the model, dataset, metric and optimizer
+#    with the algorithm of choice
+from sklearn.svm import SVC
+from sklearn.datasets import load_wine
+
+from hyponic.hyponic import HypONIC
+
+#    ...in this case, log_loss and Inertia Weight PSO
+from hyponic.metrics.classification import log_loss
+from hyponic.optimizers.swarm_based.PSO import IWPSO
+
+# 2. Creating the model and loading the dataset
+model = SVC()
+X, y = load_wine(return_X_y=True)
+
+# 3. Defining our problem
+hyperparams = {
+    "C": (0.01, 1),
+    "kernel": ["linear", "poly", "rbf", "sigmoid"],
+    "degree": [2, 3, 4, 5],
+}
+
+# 4. Parameterizing the optimizer
+optimizer_kwargs = {
+    "epoch": 10,
+    "population_size": 10,
+}
+
+# 5. Passing all to the optimizer
+hyponic = HypONIC(
+    model,
+    X, y,
+    log_loss,
+    optimizer=IWPSO,
+    **optimizer_kwargs
+)
+
+# 6. Solving for the given problem
+hyponic.optimize(hyperparams, verbose=True)
+print(hyponic.get_optimized_parameters())
+print(hyponic.get_optimized_metric())
+print(hyponic.get_optimized_model())
 ```
 
 ## Implementation details
@@ -173,52 +228,15 @@ The following algorithms are currently implemented or are planned to be implemen
 **Genetic-based:**
 - - [x] Genetic Algorithm (GA)
 
-## Minimal Example
-This is a minimal example for tuning hyperparameters of the `RandomForestRegressor` from `sklearn`.
-The default optimization is *Inertia Weight Particle Swarm Optimization* (IWPSO),
-as it has high applicability and has shown fast convergence.
 
-```python
-# 1. Import of the model, dataset, metric and optimizer
-#    with the algorithm of choice
-from sklearn.svm import SVR
-from sklearn.datasets import load_wine
+The following features are currently implemented or are planned to be implemented:
+- - [x] Early stopping based on the number of epoch without improvement
+- - [x] History of optimization
+- - [x] Parallelization
+- - [x] Visualization of the history
+- - [ ] Visualization of the optimization process
+- - [ ] Customizable stopping criteria
+- - [ ] Partial fit
+- - [ ] Different optimization initializations
+- - [ ] Identifying the problem type (regression, classification)
 
-from hyponic.hyponic import HypONIC
-
-#    ...in this case, log_loss and Inertia Weight PSO
-from hyponic.metrics.classification import log_loss
-from hyponic.optimizers.swarm_based.PSO import IWPSO
-
-# 2. Creating the model and loading the dataset
-model = SVR()
-X, y = load_wine(return_X_y=True)
-
-# 3. Defining our problem
-hyperparams = {
-    "C":       (0.01, 1),
-    "epsilon": (0.01, 0.9),
-    "kernel": ["linear", "poly", "rbf", "sigmoid"],
-}
-
-# 4. Parameterizing the optimizer
-optimizer_kwargs = {
-    "epoch": 10,
-    "pop_size": 10,
-}
-
-# 5. Passing all to the optimizer
-hyponic = HypONIC(
-    model,
-    X, y,
-    log_loss,
-    optimizer=IWPSO,
-    **optimizer_kwargs
-)
-
-# 6. Solving for the given problem
-hyponic.optimize(hyperparams, verbose=True)
-print(hyponic.get_optimized_parameters())
-print(hyponic.get_optimized_metric())
-print(hyponic.get_optimized_model())
-```
