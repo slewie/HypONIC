@@ -238,6 +238,7 @@ The following features are currently implemented or are planned to be implemente
 - - [ ] Visualization of the optimization process
 - - [ ] Customizable stopping criteria
 - - [ ] Partial fit
-- - [ ] Different optimization initializations
-- - [ ] Identifying the problem type (regression, classification)
+- - [ ] Different population initializations
+- - [x] Identifying the problem type (regression, classification)
+- - [ ] Support for pytorch or keras models
 
