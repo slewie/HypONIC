@@ -8,7 +8,7 @@ def readme():
 
 setuptools.setup(
     name='hyponic',
-    version='0.0.3',
+    version='0.0.4',
     author='Vladislav Kulikov, Daniel Satarov, Ivan Chernakov',
     author_email='v.kulikov@innopolis.university, d.satarov@innopolis.university, i.chernakov@innopolis.university',
     description='Hyperparameter Optimization with Nature-Inspired Computing',
@@ -17,9 +17,10 @@ setuptools.setup(
     url='https://github.com/slewie/HypONIC',
     packages=setuptools.find_packages(),
     install_requires=[
-        'numpy>=1.19.2',
-        'numexpr>=2.7.3',
-        'numba>=0.51.2',
+        'numpy>=1.24.2',
+        'numexpr>=2.8.4',
+        'numba>=0.57.0',
+        'matplotlib>=3.7.1',
     ],
     classifiers=[
         'Programming Language :: Python :: 3.11',

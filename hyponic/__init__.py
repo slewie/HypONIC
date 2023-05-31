@@ -1,4 +1,4 @@
-__version__ = '0.0.1-alpha-0'
+__version__ = '0.0.4'
 
 from .hyponic import HypONIC
 
