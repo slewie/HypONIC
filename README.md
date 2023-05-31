@@ -1,3 +1,4 @@
+[![Documentation Status](https://readthedocs.org/projects/hyponic/badge/?version=latest)](https://hyponic.readthedocs.io/en/latest/?badge=latest)
 # HypONIC -- Hyperparameter Optimization with Nature Inspired Computing
 
 *HypONIC* is a hyperparameter optimization library that uses various nature inspired computing algorithms to optimize
