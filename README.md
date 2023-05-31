@@ -219,7 +219,7 @@ The following algorithms are currently implemented or are planned to be implemen
 - - [x] Inertia Weight PSO (IWPSO)
 - - [x] Ant Colony Optimization (ACO)
 - - [x] Artificial Bee Colony (ABC)
-- - [ ] Grey Wolf Optimizer (GWO)
+- - [x] Grey Wolf Optimizer (GWO)
 - - [x] Cuckoo Search (CS)
 - - [ ] Firefly Algorithm (FA)
 

@@ -22,6 +22,13 @@ hyponic.optimizers.swarm\_based.CS module
    :undoc-members:
    :show-inheritance:
 
+hyponic.optimizers.swarm\_based.GWO module
+------------------------------------------
+.. automodule:: hyponic.optimizers.swarm_based.GWO
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hyponic.optimizers.swarm\_based.PSO module
 ------------------------------------------
 .. automodule:: hyponic.optimizers.swarm_based.PSO

@@ -79,7 +79,7 @@ class CS(BaseOptimizer):
     def initialize(self, problem_dict):
         super().initialize(problem_dict)
 
-        self.nests = np.random.uniform(self.lb, self.ub, (self.population_size, self.dimensions))
+        self.nests = self.coords
         self.nests_fitness = np.array([self.function(self.nests[i]) for i in range(self.population_size)])
         self.cuckoo_coords = np.random.uniform(self.lb, self.ub, self.dimensions)
 
