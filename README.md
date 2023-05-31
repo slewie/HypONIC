@@ -220,7 +220,7 @@ The following algorithms are currently implemented or are planned to be implemen
 - - [x] Ant Colony Optimization (ACO)
 - - [x] Artificial Bee Colony (ABC)
 - - [ ] Grey Wolf Optimizer (GWO)
-- - [ ] Cuckoo Search (CS)
+- - [x] Cuckoo Search (CS)
 - - [ ] Firefly Algorithm (FA)
 
 **Physics-based:**

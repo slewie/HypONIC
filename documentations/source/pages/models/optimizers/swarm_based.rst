@@ -15,6 +15,13 @@ hyponic.optimizers.swarm\_based.ACO module
    :undoc-members:
    :show-inheritance:
 
+hyponic.optimizers.swarm\_based.CS module
+------------------------------------------
+.. automodule:: hyponic.optimizers.swarm_based.CS
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hyponic.optimizers.swarm\_based.PSO module
 ------------------------------------------
 .. automodule:: hyponic.optimizers.swarm_based.PSO
