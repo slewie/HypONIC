@@ -219,8 +219,8 @@ The following algorithms are currently implemented or are planned to be implemen
 - - [x] Inertia Weight PSO (IWPSO)
 - - [x] Ant Colony Optimization (ACO)
 - - [x] Artificial Bee Colony (ABC)
-- - [ ] Grey Wolf Optimizer (GWO)
-- - [ ] Cuckoo Search (CS)
+- - [x] Grey Wolf Optimizer (GWO)
+- - [x] Cuckoo Search (CS)
 - - [ ] Firefly Algorithm (FA)
 
 **Physics-based:**
@@ -238,6 +238,7 @@ The following features are currently implemented or are planned to be implemente
 - - [ ] Visualization of the optimization process
 - - [ ] Customizable stopping criteria
 - - [ ] Partial fit
-- - [ ] Different optimization initializations
-- - [ ] Identifying the problem type (regression, classification)
+- - [ ] Different population initializations
+- - [x] Identifying the problem type (regression, classification)
+- - [ ] Support for pytorch or keras models
 

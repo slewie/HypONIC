@@ -72,7 +72,6 @@ class PSO(BaseOptimizer):
             raise ValueError("a2 should be a float or an integer")
 
     def initialize(self, problem_dict):
-        # TODO: check if the problem_dict is valid
         # TODO: if lb and ub are not provided, use the default values
         super().initialize(problem_dict)
         self.g_best = np.inf if self.minmax == "min" else -np.inf
