@@ -15,6 +15,8 @@ from .optimizers.physics_based.SA import SA
 from .optimizers.swarm_based.ABC import ABC
 from .optimizers.swarm_based.ACO import ACO
 from .optimizers.swarm_based.PSO import PSO, IWPSO
+from .optimizers.swarm_based.GWO import GWO
+from .optimizers.swarm_based.CS import CS
 from .optimizers.base_optimizer import BaseOptimizer
 
 from .space import Space, Dimension, Continuous, Discrete
