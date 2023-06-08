@@ -3,7 +3,7 @@ from warnings import warn
 from hyponic.optimizers.swarm_based.PSO import IWPSO
 from hyponic.metrics.decorators import METRICS_DICT
 from hyponic.utils.problem_identifier import ProblemIdentifier, ProblemType
-from hyponic.config.sklearn_models import models_dict
+from hyponic import config
 
 from typing import Callable
 
@@ -93,9 +93,11 @@ class HypONIC:
         y_pred = self.model.predict(self.X)
         return self.metric(self.y, y_pred)  # TODO: maybe cross-validation could be used instead
 
-    def optimize(self, hyperparams: dict | None = None, verbose=False) -> (dict, float):
+    def optimize(self, hyperparams: dict | None = None, verbose=False,
+                 models_config=config.sklearn_models.models_dict) -> (dict, float):
+        print(self.model.__class__)
         if hyperparams is None:
-            hyperparams = models_dict.get(str(self.model.__class__), dict())
+            hyperparams = models_config.get(str(self.model.__class__), dict())
 
         # Create a space for hyperparameters
         hyperspace = Space(hyperparams)
