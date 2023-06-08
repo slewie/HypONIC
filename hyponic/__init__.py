@@ -23,3 +23,5 @@ from .space import Space, Dimension, Continuous, Discrete
 
 from .utils.history import History
 from .utils.problem_identifier import ProblemIdentifier, ProblemType
+
+from .config.sklearn_models import models_dict
