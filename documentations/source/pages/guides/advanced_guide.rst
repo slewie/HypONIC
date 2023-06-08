@@ -46,7 +46,18 @@ Example
 Models
 ------
 
-The models must be a scikit-learn compatible model. It must have a fit method and a predict method. In the future, we will add support for other frameworks.
+The models must be a scikit-learn, xgboost or lightgbm compatible model. It must have a fit method and a predict method. In the future, we will add support for other frameworks.
+We have implemented default hyperparameters for several sklearn models. You can check them in the config/sklearn_models.py. For example, if you want to optimize the hyperparameters of the SVC model:
+
+.. code-block:: python
+
+   hyponic = HypONIC(SVC(), X, y)
+   hyponic.optimize()
+   print(hyponic.get_optimized_parameters())
+   print(hyponic.get_optimized_metric())
+   print(hyponic.get_optimized_model())
+
+Our library tune the hyperparameters independently, so you can use the optimized model directly.
 
 Metrics
 -------

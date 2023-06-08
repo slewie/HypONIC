@@ -2,7 +2,7 @@
 # HypONIC -- Hyperparameter Optimization with Nature Inspired Computing
 
 *HypONIC* is a hyperparameter optimization library that uses various nature inspired computing algorithms to optimize
-the hyperparameters of machine learning models. The library provides a simple interface for sklearn models.
+the hyperparameters of machine learning models. The library provides a simple interface for Sklearn, XGBoost, LightGBM models.
 
 *Documentation*: https://hyponic.readthedocs.io/en/latest/
 ## Library Structure
@@ -37,6 +37,9 @@ the hyperparameters of machine learning models. The library provides a simple in
 |   |-- utils/
 |       |-- history.py
 |       |-- problem_identifier.py
+|
+|   |--confi/
+|   |   |-- sklearn_models.py
 |-- examples/
     |-- datasets/
 ```
@@ -94,6 +97,42 @@ print(hyponic.get_optimized_parameters())
 print(hyponic.get_optimized_metric())
 print(hyponic.get_optimized_model())
 ```
+
+## Features
+*HypONIC* supports different nature inspired computing algorithms.
+Please note that the library is currently under development and may contain a significant number of bugs and errors.
+All algorithms are subject to further improvement.
+
+The following algorithms are currently implemented or are planned to be implemented:
+
+**Swarm-based:**
+- - [x] Particle Swarm Optimization (PSO)
+- - [x] Inertia Weight PSO (IWPSO)
+- - [x] Ant Colony Optimization (ACO)
+- - [x] Artificial Bee Colony (ABC)
+- - [x] Grey Wolf Optimizer (GWO)
+- - [x] Cuckoo Search (CS)
+- - [ ] Firefly Algorithm (FA)
+
+**Physics-based:**
+- - [x] Simulated Annealing (SA)
+
+**Genetic-based:**
+- - [x] Genetic Algorithm (GA)
+
+
+The following features are currently implemented or are planned to be implemented:
+- - [x] Early stopping based on the number of epoch without improvement
+- - [x] History of optimization
+- - [x] Parallelization
+- - [x] Visualization of the history
+- - [ ] Visualization of the optimization process
+- - [ ] Customizable stopping criteria
+- - [ ] Partial fit
+- - [ ] Different population initializations
+- - [x] Identifying the problem type (regression, classification)
+- - [ ] Support for pytorch or keras models
+- - [x] Default hyperparameter space for several models
 
 ## Implementation details
 *HypONIC* library follows a common high-level approach by providing a unified interface for applying an optimization algorithm
@@ -208,38 +247,4 @@ non-numerical values is encoded first and then uniformly mapped to the continuou
 
 *is subject to change
 
-## Features
-*HypONIC* supports different nature inspired computing algorithms.
-Please note that the library is currently under development and may contain a significant number of bugs and errors.
-All algorithms are subject to further improvement.
-
-The following algorithms are currently implemented or are planned to be implemented:
-
-**Swarm-based:**
-- - [x] Particle Swarm Optimization (PSO)
-- - [x] Inertia Weight PSO (IWPSO)
-- - [x] Ant Colony Optimization (ACO)
-- - [x] Artificial Bee Colony (ABC)
-- - [x] Grey Wolf Optimizer (GWO)
-- - [x] Cuckoo Search (CS)
-- - [ ] Firefly Algorithm (FA)
-
-**Physics-based:**
-- - [x] Simulated Annealing (SA)
-
-**Genetic-based:**
-- - [x] Genetic Algorithm (GA)
-
-
-The following features are currently implemented or are planned to be implemented:
-- - [x] Early stopping based on the number of epoch without improvement
-- - [x] History of optimization
-- - [x] Parallelization
-- - [x] Visualization of the history
-- - [ ] Visualization of the optimization process
-- - [ ] Customizable stopping criteria
-- - [ ] Partial fit
-- - [ ] Different population initializations
-- - [x] Identifying the problem type (regression, classification)
-- - [ ] Support for pytorch or keras models
 
