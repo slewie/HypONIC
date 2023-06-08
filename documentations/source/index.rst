@@ -6,7 +6,7 @@
 Welcome to HypONIC's documentation!
 ===================================
 
-HypONIC is a hyperparameter optimization library that uses various nature inspired computing algorithms to optimize the hyperparameters of machine learning models. The library provides a simple interface for sklearn models.
+HypONIC is a hyperparameter optimization library that uses various nature inspired computing algorithms to optimize the hyperparameters of machine learning models. The library provides a simple interface for Sklearn, XGBoost, LightGBM models. It also provides a simple interface for custom models.
 
 .. toctree::
     :maxdepth: 4
